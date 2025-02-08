@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">User Registration</li>
+    </ul>
+	<h3>User Registration</h3>
+	<hr class="soft"/>	
+	<div class="well" style="background:#202020;color:white">
+	<br/>
+	<form class="form-horizontal" method="post" action="{% url 'userSignupAction' %}" id="formsignup" enctype="multipart/form-data">
+	{% csrf_token %}	
+		<div class="control-group">
+			<label class="control-label" for="pro_img">Profile Photo<sup>*</sup></label>
+			<div class="controls">
+			  <input type="file" name="pro_img" id="pro_img" required>
+			</div>
+		 </div>
+		 	  
+		<div class="control-group">
+			<label class="control-label" for="name">Name<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="name" id="name" placeholder="Name" required>
+			</div>
+		 </div>
+
+		<div class="control-group">
+			<label class="control-label" for="gender">Gender<sup>*</sup></label>
+			<div class="controls">
+			  <input type="radio" name="gender" id="mgender" value="Male" checked="true"/>&nbsp<span>Male</span>
+				<input type="radio" name="gender" id="fgender" value="Female"/>&nbsp<span>Female</span>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="address">Address<sup>*</sup></label>
+			<div class="controls">
+			  <textarea name="address" id="address" rows="4" placeholder="Address" required></textarea>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="dob">Date Of Birth<sup>*</sup></label>
+			<div class="controls">
+			  <input type="date" name="dob" id="dob" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="state">State<sup>*</sup></label>
+			<div class="controls">
+			 	<input type="text" value="Kerala" readonly="true" id="state"/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="district">District<sup>*</sup></label>
+			<div class="controls">
+			 <select name="district" id="district" required>
+				<option value="">--select--</option>
+				{% for d in districts %}
+					<option value="{{d.id}}">{{d.district_name}}</option>
+				{% endfor %}
+			  </select>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="place">Place<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="place" id="place" placeholder="Place" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="phone">Phone<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="phone" id="phone" pattern="^\d{10}$" placeholder="Phone" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="email">Email<sup>*</sup></label>
+			<div class="controls">
+			  <input type="email" name="email" id="email" placeholder="Email" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="username">Username<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="username" id="username" placeholder="Username" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="password">Password<sup>*</sup></label>
+			<div class="controls">
+			  <input type="password" name="password" id="password" pattern=".{8,}" title="Eight or more Characters" placeholder="Password" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="confirm_password">Confirm Password<sup>*</sup></label>
+			<div class="controls">
+			  <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" id="signup" type="submit" value="Register"/>
+			</div>
+		</div>		
+	</form>
+</div>
+
+</div>
+		
+	<script src="/static/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			var password=document.getElementById("password");
+			var confirm_password=document.getElementById("confirm_password");
+			function validatePassword(){
+				if(password.value != confirm_password.value){
+					confirm_password.setCustomValidity("Passwords Don't Match");
+				}
+				else{
+					confirm_password.setCustomValidity('');
+				}
+			}
+			password.onchange=validatePassword;
+			confirm_password.onkeyup=validatePassword;
+
+			
+			$("#username").change(function(){
+
+				
+
+					$.ajax({
+						url:"{% url 'checkUsername' %}",
+						data:{'username':$("#username").val()},
+						success:function(data){
+							if(data.status == "exists"){
+								alert('Username Already Exists');
+								$("#username").val('');
+								
+							}
+							
+			
+						}
+					});
+				
+
+			});
+			
+		});
+		
+		
+			
+				
+				
+			
+
+		
+
+	</script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

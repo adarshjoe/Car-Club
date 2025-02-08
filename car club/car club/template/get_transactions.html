@@ -1,0 +1,24 @@
+<html>
+	<body>
+		{% if msg %}
+			<label>{{msg}}</label>
+		{% else %}
+		<table>
+			<tr>
+				<th>Spare Part</th>
+				<th>Buyer</th>
+				<th>Amount</th>
+				<th>Date</th>
+			</tr>
+			{% for v in data %}
+				<tr>
+					<td>{{v.order_id.part_id.part_name}}</td>
+					<td>{{v.user_id.username}}</td>
+					<td>{{v.amount}}</td>
+					<td>{{v.date}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		{% endif %}
+	</body>
+</html>

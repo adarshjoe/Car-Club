@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active"> Order Status</li>
+    </ul>
+	<h3> Order Status </h3>	
+	<hr class="soft"/>		
+	{% if msg %}
+		<label>{{msg}}</label>
+	{% else %}
+		<div class="tab-content">
+		
+		<div id="listView" style="background:#202020;color:white">
+		<br/>
+		{% for v in data %}
+				<div class="row">	  
+					<div class="span2" style="padding-left:5em">
+						<img class="img-resize-user" src="{{v.part_id.path.url}}" alt=""/>
+					</div>
+					<div class="span4">
+					<h3 style="font-size:20px">{{v.part_id.part_name}}</h3>				
+					<hr class="soft"/>
+					<p>
+						Brand : {{v.part_id.brand_id.brand_name}}<br/>
+						Model : {{v.models}}<br/>
+						Quantity : {{v.count}}<br/>
+						Total Price : {{v.total_price}} RS<br/>
+						Date : {{v.date}}<br/>
+						Status : {{v.status}}
+			
+					</p>
+					{% if v.status == "approved" %}
+						<a class="btn" href="{% url 'payForOrder' oid=v.id page=data.number %}">Pay</a>
+						<a class="btn" href="{% url 'cancelOrder' oid=v.id page=data.number %}">Cancel Order</a>
+		  			{% elif v.status == "paid" %}
+						<a class="btn" href="{% url 'viewTrackingDetails' v.id %}">View Tracking Details</a>
+						<a class="btn" href="{% url 'viewPaymentDetails' v.id %}">Payment Details</a>
+		 			{% elif v.status == "pending" %}
+						<a class="btn" href="{% url 'cancelOrder' oid=v.id page=data.number %}">Cancel Order</a>
+		 			{% endif %}
+					{% if v.status == "delivered" %}
+						<a class="btn" href="{% url 'rateAndReview' v.id %}">Give Your Review</a>
+					{% endif %}
+					</div>
+					
+				</div>
+			<hr class="soft"/>
+			{% endfor %}
+		</div>
+
+	
+		<hr class="soft"/>
+		</div>
+	{% endif %}
+	
+	<div class="pagination">
+		{% if data.has_other_pages %}
+			<ul class="pagination" style="border:5px solid #202020;">
+				{% if data.has_previous %}
+					<li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&laquo;</span></li>
+				{% endif %}
+				{% for i in data.paginator.page_range %}
+					{% if data.number == i %}
+						<li class="active"><span>{{i}}<span class="sr-only">(current)</span></span></li>
+					{% else %}
+						<li><a href="?page={{i}}">{{i}}</a></li>
+					{% endif %}
+				{% endfor %}
+				{% if data.has_next %}
+					<li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&raquo;</span></li>
+				{% endif %}
+			</ul>
+		{% endif %}
+	</div>
+	
+<br/>
+
+		
+</div>
+
+	
+
+		<script src="/static/jquery.min.js"></script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

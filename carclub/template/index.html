@@ -1,0 +1,379 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="span9">
+	{% if 'user_id' in request.session %}
+
+		<h4>Latest Parts </h4>
+		<hr class="soft"/>
+			{% if part %}
+				
+			  <ul class="thumbnails">
+				{% for p in part %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					</br>
+					<a  href="{% url 'partDetails' p.id %}"><img src="{{p.part_obj.path.url}}" class="img-resize" alt=""/></a>
+					<div class="caption">
+					  <h5 style="color:white">{{p.part_name}}</h5>
+					  <p style="color:white"> 
+						Brand : {{p.brand_id.brand_name}}<br/>
+						Models : {{p.models}} <br/>
+						Price : {{p.price}} RS
+					  </p>
+					 
+					  <h4 style="text-align:center"><a class="btn" href="{% url 'partDetails' p.id %}"> <i class="icon-zoom-in"></i></a> 
+						<a class="btn" href="{% url 'addToCart' p.id %}">Add to <i class="icon-shopping-cart"></i></a>
+						
+						 <a class="btn btn-primary" href="{% url 'viewReview' p.id %}">Reviews</a></h4>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+				<a class="btn" style="border:5px solid #202020;" href="{% url 'viewSparePartsUser' %}">Check More</a>
+			{% else %}
+				<label>None</label>
+			{% endif %}
+			<hr class="soft"/>
+	{% elif 'spare_shop_id' in request.session %}
+
+		<h4>Latest Orders</h4>
+		<hr class="soft"/>
+			{% if orders %}
+			  <ul class="thumbnails">
+				{% for o in orders %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					<br/>
+					<img class="img-resize" src="{{o.part_id.path.url}}" class="img-resize" alt=""/>
+					<div class="caption" style="color:white">
+					  <h5>{{o.part_id.part_name}}</h5>
+					  <p> 
+						Buyer : {{o.user_id.username}} <br/>
+						Quantity : {{o.count}}<br/>
+						Total Price : {{o.total_price}} RS<br/>
+						Status : {{o.status}}
+					  </p>
+					 
+					  <h4 style="text-align:center"><a class="btn" href="{% url 'orderDetails' o.id %}">Details</a></h4>
+						 
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+				<a class="btn" style="border:5px solid #202020;" href="{% url 'viewOrders' %}">Check More</a>
+			{% else %}
+				<label>None</label>
+			{% endif %}
+		<hr class="soft"/>
+		<h4>Your Latest Products</h4>
+		<hr class="soft"/>
+			{% if latest_parts %}
+			  <ul class="thumbnails">
+				
+				{% for p in latest_parts %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					<br/>
+					<img class="img-resize" src="{{p.part_obj.path.url}}" class="img-resize" alt=""/>
+					<div class="caption" style="color:white">
+					  <h5>{{p.part_name}}</h5>
+					  <p> 
+						Brand : {{p.brand_id.brand_name}}<br/>
+						Models : {{p.models}} <br/>
+						Price : {{p.price}} RS<br/>
+						Stock : {{p.stock}}
+					  </p>
+					 
+					  <h4 style="text-align:center"><a class="btn" href="{% url 'updateSparePart' p.id %}">Update</a></h4>
+						 
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			{% else %}
+				<label>None</label>
+			{% endif %}
+			<hr class="soft"/>
+
+	{% elif 'workshop_id' in request.session %}
+
+		<h4>Latest Added Services </h4>
+		<hr class="soft"/>
+		{% if services %}
+			  <ul class="thumbnails">
+				{% for s in services %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					</br>
+					<img class="img-resize" src="{{s.service_img.url}}" alt=""/>
+					<div class="caption" style="color:white">
+					  <h5 style="font-size:18px">{{s.service}}</h5>
+					 <p style="font-size:17px">
+						Status : {{s.status}}
+					 </p>
+					  <h4 style="text-align:center">
+						<a class="btn" href="{% url 'updateService' s.id %}">Update</a>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			
+		{% else %}
+			<label>None</label>
+		{% endif %}
+		<hr class="soft"/>
+		<h4>Latest Reviews </h4>
+		<hr class="soft"/>
+		{% if workshop_reviews %}
+			<div class="tab-content">
+		
+	   		 <div id="listView" style="background:#202020;color:white">
+			<br/>
+			{% for w in workshop_reviews %}
+				<div class="row">	  
+					<div class="span2" style="padding-left:5em">
+						<img class="img-resize-user" src="{{w.user_id.path.url}}" alt=""/>
+					</div>
+					<div class="span4">
+					<h3 style="font-size:20px">{{w.user_id.username}}</h3>				
+					<hr class="soft"/>
+					<p>
+						<div class="jstars"
+							data-value="{{w.rating}}"
+							data-total-stars="5"
+							data-color="#FFFF00"
+							data-empty-color="white"
+							data-size="25px">
+						</div><br/><input type="text" style="width:27px" name="rating" id="rating" value="{{w.rating}}" readonly="true"/><br/>
+						Review : {{w.review}}<br/><br/>
+						Date : {{w.date}}
+
+					</p>
+					
+					</div>
+					
+				</div>
+			<hr class="soft"/>
+		   {% endfor %}
+	</div>
+	<a class="btn" style="border:5px solid #202020;" href="{% url 'viewReviewsByWorkshop' %}">Check More</a>
+	
+	{% else %}
+		<label>None</label>
+	{% endif %}
+	<hr class="soft"/>
+
+	{% elif 'admin_id' in request.session %}
+
+		<h4>Latest Sales </h4>
+		<hr class="soft"/>
+		{% if sales %}
+			  <ul class="thumbnails">
+				{% for s in sales %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					</br>
+					<img class="img-resize" src="{{s.shop_id.logo.url}}" alt=""/>
+					<div class="caption">
+					  <h5 style="color:white">{{s.shop_id.username}}</h5>
+					  <p style="color:white"> 
+						Spare Part Name : {{s.order_id.part_id.part_name}} <br/>
+						Amount : {{s.amount}} RS<br/>
+						Seller : {{s.shop_id.username}}<br/>
+						Status : {{s.status}}
+					  </p>
+					 
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			<a class="btn" style="border:5px solid #202020;" href="{% url 'salesReport' %}">Check More</a>
+		
+		{% else %}
+			<label>None</label>
+		{% endif %}
+		<hr class="soft"/>
+		<h4>Latest Spare Part Shop Registrations </h4>
+		<hr class="soft"/>
+		{% if shop_signups %}
+			  <ul class="thumbnails">
+				{% for s in shop_signups %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					<br/>
+					<img class="img-resize" src="{{s.logo.url}}" class="img-resize" alt=""/>
+					<div class="caption">
+					  <h5 style="color:white">{{s.username}}</h5>
+					  <p style="color:white"> 
+						Phone : {{s.phone}} <br/>
+						Email : {{s.email}} <br/>
+						Status : {{s.status}}<br/>
+					  </p>
+					 <h4 style="text-align:center"><a class="btn" href="{% url 'shopDetails' s.id %}">Details</a></h4>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			
+		
+		{% else %}
+			<label>None</label>
+		{% endif %}
+		<hr class="soft"/>
+		<h4>Latest Workshop Registrations </h4>
+		<hr class="soft"/>
+		{% if workshop_signups %}
+			  <ul class="thumbnails">
+				{% for w in workshop_signups %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					<br/>
+					<img class="img-resize" src="{{w.logo.url}}" class="img-resize" alt=""/>
+					<div class="caption">
+					  <h5 style="color:white">{{w.username}}</h5>
+					  <p style="color:white"> 
+						Phone : {{w.phone}} <br/>
+						Email : {{w.email}} <br/>
+						Status : {{w.status}}<br/>
+					  </p>
+					 <h4 style="text-align:center"><a class="btn" href="{% url 'workshopDetails' w.id %}">Details</a></h4>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			
+		</div>
+		
+		{% else %}
+			<label>None</label>
+		{% endif %}
+		<hr class="soft"/>
+
+	{% else %}
+		
+		<h4>Latest Parts </h4>
+		<hr class="soft"/>
+			{% if part %}
+			  <ul class="thumbnails">
+				{% for p in part %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					</br>
+					<a  href="{% url 'partDetails' p.id %}"><img src="{{p.part_obj.path.url}}" class="img-resize" alt=""/></a>
+					<div class="caption">
+					  <h5 style="color:white">{{p.part_name}}</h5>
+					  <p style="color:white"> 
+						Brand : {{p.brand_id.brand_name}}<br/>
+						Models : {{p.models}} <br/>
+						Price : {{p.price}} RS
+					  </p>
+					 
+					  <h4 style="text-align:center"><a class="btn" href="{% url 'partDetails' p.id %}"> <i class="icon-zoom-in"></i></a>
+						
+						<a class="btn" href="{% url 'login' %}">Add to <i class="icon-shopping-cart"></i></a>
+						
+						 <a class="btn btn-primary" href="{% url 'viewReview' p.id %}">Reviews</a></h4>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+				<a class="btn" style="border:5px solid #202020;" href="{% url 'viewSparePartsUser' %}">Check More</a>
+			{% else %}
+				<label>None</label>
+			{% endif %}
+			<hr class="soft"/>
+
+	{% endif %}
+	
+</div>
+</div>
+{% if 'spare_shop_id' not in request.session and 'workshop_id' not in request.session and 'admin_id' not in request.session %}
+	<hr class="soft"/>
+	<div class="pos">
+	<h5 align="center" style="color:black">Advanced Search For Spare Parts</h5><br/>
+			<div class="well" style="background:#0d0d0d;color:white" align="center">
+			<br/>
+				<form id="form1" method="get" action="{% url 'getSpareParts' %}">
+			{% csrf_token %}
+			<table>
+			<tr>
+				<td>Vehicle</td>
+				<td><select id="vehicle" name="vehicle">
+					<option value="">--select--</option>
+					{% for v in vehicles %}
+						<option value="{{v.id}}">{{v.vehicle_name}}</option>
+					{% endfor %}
+					</select>
+				</td>
+
+			</tr>
+			<tr>
+				<td>Brand</td>
+				<td><select id="brand" name="brand">
+					<option value="">--select--</option>
+				    </select>
+				</td>
+			</tr>
+			<tr>
+				<td>Model</td>
+				<td><select id="model" name="model">
+						<option value="">--select--</option>
+				    		</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Category&nbsp&nbsp</td>
+				<td><select id="category" name="category">
+					<option value="">--select--</option>
+				    	</select>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="text" name="part_name" id="partname" class="part_name" placeholder="Spare Part Name"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><button type="submit" class="btn btn-success" name="view" id="view">Search</button></td>
+			</tr>
+		</table>
+		</form>
+			
+		</div>
+	</div>
+	{% endif %}
+<script src="/static/jquery.min.js"></script>
+<script src="/static/jstars.min.js"></script>	
+	
+
+{% endblock %}
+
+	
+	

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Services</li>
+    </ul>
+	<h3> Services </h3>	
+	<hr class="soft"/>
+	{% if msg %}
+		<lable>{{msg}}</label>
+	{% else %}
+	<div class="tab-content">
+	
+	<div id="listView" style="background:#202020;color:white">
+	<br/>
+		{% for v in data %}
+		<div class="row">
+			<div class="span2" style="padding-left:5em">
+						<a href="{{v.service_img.url}}"><img class="img-resize-details" src="{{v.service_img.url}}" alt=""/></a>
+					</div>	  
+			<div class="span4" style="padding-left:2em">
+				<h3>{{v.service}}</h3>				
+				<hr class="soft"/>
+				<p style="font-size:15px">
+					Status : {{v.status}}<br/><br/>
+					Description : {{v.description}}<br/><br/>
+					
+				</p>
+				<a class="btn" href="{% url 'updateService' v.id %}">Update</a>
+				
+				<a class="btn" href="{% url 'deleteService' sid=v.id page=data.number %}">Delete</a>
+				
+				
+				<br class="clr"/>
+			</div>
+			
+		</div>
+		<hr class="soft"/>
+		{% endfor %}
+		
+	</div>
+
+	</div>
+	{% endif %}
+	<div class="pagination">
+		{% if data.has_other_pages %}
+			<ul class="pagination" style="border:5px solid #202020;">
+				{% if data.has_previous %}
+					<li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&laquo;</span></li>
+				{% endif %}
+				{% for i in data.paginator.page_range %}
+					{% if data.number == i %}
+						<li class="active"><span>{{i}}<span class="sr-only">(current)</span></span></li>
+					{% else %}
+						<li><a href="?page={{i}}">{{i}}</a></li>
+					{% endif %}
+				{% endfor %}
+				{% if data.has_next %}
+					<li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&raquo;</span></li>
+				{% endif %}
+			</ul>
+		{% endif %}
+	</div>	
+	<br/>	
+
+</div>
+		
+	<script src="/static/jquery.min.js"></script>
+	{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+	{% endif %}
+	
+					
+					
+			
+{% endblock %}

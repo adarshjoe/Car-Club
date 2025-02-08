@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>Order Status<span class="divider">/</span></li>
+		<li class="active">Tracking Details</li>
+    </ul>
+	<h3> Tracking Details</h3>
+	<hr class="soft"/>
+	{% if msg %}
+			<label>{{msg}}</label>
+	{% else %}	
+	<div class="well">
+		<div class="row">	  
+			<div class="span8">		
+				<p style="font-size:17px">
+					<b>Tracking Details :</b> {{data.tracking_details}}<br/><br/>
+		 			<b>Date :</b> {{data.date}}<br/><br/>
+			  		<b>Time :</b> {{data.time}}<br/>
+				</p>
+			</div>		
+		</div>
+					
+				
+			
+	</div>
+	{% endif %}
+
+</div>
+		
+{% endblock %}

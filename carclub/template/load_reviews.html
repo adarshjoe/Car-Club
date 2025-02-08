@@ -1,0 +1,41 @@
+{% load static %}
+<html>
+	<script src="/static/jquery.min.js"></script>
+	<script src="/static/jstars.min.js"></script>
+	<body>
+		<div>
+			{% for r in reviews %}
+				<table>
+					<tr>
+						<td></td>
+						<td>{{r.user_id.username}}</td>
+					</tr>
+					<tr>
+						<td>Rating</td>
+						<td>
+							<div class="jstars"
+								data-value="{{r.rating}}"
+								data-total-stars="5"
+								data-color="#FFFF00"
+								data-empty-color="black"
+								data-size="25px">
+							</div>
+						</td>
+						<td><input type="text" style="width:27px" name="rating" id="rating" value="{{r.rating}}" readonly="true"/></td>
+					</tr>
+					<tr>
+						<td>Review</td>
+						<td>{{r.review}}</td>
+					</tr>
+					<tr>
+						<td>Date</td>
+						<td>{{r.date}}</td>
+					</tr>
+				</table>
+			{% endfor %}
+			{% if msg %}
+				<label>{{msg}}</label>
+			{% endif %}
+		</div>
+	</body>
+</html>

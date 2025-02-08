@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	
+	<div class="span9">
+    	<ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>Services<span class="divider">/</span></li>
+		<li class="active">Update Service</li>
+    	</ul>
+	<h3>Update Service</h3>	
+	<hr class="soft"/>
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	
+	<form class="form-horizontal" method="post" action="{% url 'updateServiceAction' %}" enctype="multipart/form-data">
+	{% csrf_token %}
+		{% for v in data %}
+		<input type="hidden" name="service_id" id="service_id" value="{{v.id}}"/>
+		<div class="control-group">
+			
+			<div class="controls">
+			  <img src="{{v.service_img.url}}" class="img-resize-details" alt=""/>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="upload">Photo<sup>*</sup></label>
+			<div class="controls">
+			  <input type="file" name="upload" id="upload" required/>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="service">Service<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="service" id="service" placeholder="Service" value="{{v.service}}" required/>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="description">Description<sup>*</sup></label>
+			<div class="controls">
+			  <textarea name="description" id="description" placeholder="Description" rows="5" required>{{v.description}}</textarea>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="description">Status<sup>*</sup></label>
+			<div class="controls">
+			{% if v.status == 'available' %}
+				<input type="radio" name="status" id="status" checked="true" value="available"/>&nbspAvailable
+				&nbsp&nbsp<input type="radio" name="status" id="status" value="unavailable"/>&nbspUnavailable
+			{% else %}
+				<input type="radio" name="status" id="status" value="available"/>&nbspAvailable
+				&nbsp&nbsp<input type="radio" name="status" id="status" checked="true" value="unavailable"/>&nbspUnavailable
+			{% endif %}
+			</div>
+		 </div>
+		
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Update" />
+			</div>
+		</div>	
+		{% endfor %}
+	</form>
+	
+</div>
+</div>
+	
+	<script src="/static/jquery.min.js"></script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+	</script>
+		
+{% endblock %}

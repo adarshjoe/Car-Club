@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>Order Status<span class="divider">/</span></li>
+		<li class="active">Payment</li>
+    </ul>
+	<h3> Payment</h3>
+	<hr class="soft"/>	
+	<div class="well" style="background:#202020;color:white;">
+	<br/><br/>
+	<form class="form-horizontal" method="post" action="{% url 'payForOrderAction' %}">
+	{% csrf_token %}
+		{% for v in data %}
+			<input type="hidden" name="orderpage" id="orderpage" value="{{page}}"/>	
+			<input type="hidden" name="order_id" id="order_id" value="{{v.id}}"/>
+		<div class="control-group">
+			<label class="control-label" for="name">Name On Card<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="name" id="name" placeholder="Name On Card" required/>
+			</div>
+		 </div>
+		 	  
+		<div class="control-group">
+			<label class="control-label" for="c_c_n">Credit Card Number<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="c_c_n" id="c_c_n" placeholder="Credit Card Number" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="cvv">CVV<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="cvv" id="cvv" placeholder="CVV" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="amount">Amount<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="amount" id="amount" readonly="true" value="{{v.total_price}}"/> <span>RS</span>
+			</div>
+		 </div>
+		
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Submit" />
+			</div>
+		</div>
+		{% endfor %}	
+	</form>
+</div>
+
+</div>
+		
+		<script src="/static/jquery.min.js"></script>
+		
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

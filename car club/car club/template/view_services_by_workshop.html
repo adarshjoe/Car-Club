@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Services</li>
+    </ul>
+	<h3> Services </h3>	
+	{% if msg %}
+		<lable>{{msg}}</label>
+	{% else %}
+	<div class="tab-content">
+	
+	<div id="listView" class="shop-details" style="display: flex;flex-direction: column;gap: 20px;">
+		{% for v in data %}
+		<div class="row">
+			<div class="span3">
+						<a href="{{v.service_img.url}}">
+							<div class="image-frame" style="background:url('{{v.service_img.url}}');background-size: cover;background-position: center;"></div>
+						</a>
+					</div>	  
+			<div class="span9" style="padding:0px;border: none;">
+				<h3 style="text-transform: capitalize;">{{v.service}}</h3>				
+				<hr class="soft"/>
+				<p style="font-size:15px">
+					<b>Status :</b> {{v.status}}<br/><br/>
+					<b>Description :</b> {{v.description}}<br/><br/>
+					
+				</p>
+				<div class="btn-group-wrapper" style="padding: 0px;">
+					<a class="btn btn-accent" href="{% url 'updateService' v.id %}">Update</a>
+					<a class="btn btn-secondary" href="{% url 'deleteService' sid=v.id page=data.number %}">Delete</a>
+				</div>
+				
+			</div>
+			
+		</div>
+		{% endfor %}
+	</div>
+
+	</div>
+	{% endif %}
+	<div class="pagination">
+		{% if data.has_other_pages %}
+			<ul class="pagination">
+				{% if data.has_previous %}
+					<li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&laquo;</span></li>
+				{% endif %}
+				{% for i in data.paginator.page_range %}
+					{% if data.number == i %}
+						<li class="active"><span>{{i}}<span class="sr-only">(current)</span></span></li>
+					{% else %}
+						<li><a href="?page={{i}}">{{i}}</a></li>
+					{% endif %}
+				{% endfor %}
+				{% if data.has_next %}
+					<li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&raquo;</span></li>
+				{% endif %}
+			</ul>
+		{% endif %}
+	</div>	
+</div>
+		
+	<script src="/static/jquery.min.js"></script>
+	{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+	{% endif %}
+	
+					
+					
+			
+{% endblock %}

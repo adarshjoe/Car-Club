@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Find Workshops</li>
+    </ul>
+	<h3> Find Workshops </h3>	
+	<hr class="soft"/>
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" id="workshop" method="get" action="{% url 'getNearbyWorkshop' %}">
+	{% csrf_token %}
+		
+		
+		<div class="control-group">
+		    <label class="control-label" for="district">District<sup></sup></label>
+		  
+			<div class="controls">
+			<select name="district" id="district">
+				<option value="">--select--</option>
+				{% for d in districts %}
+					<option value="{{d.id}}">{{d.district_name}}</option>
+				{% endfor %}
+			</select>
+			</div>
+		</div>
+		<div class="control-group">
+		    <label class="control-label" for="place">Place<sup></sup></label>
+		  
+			<div class="controls">
+			<input type="text" name="place" id="place"/>
+			</div>
+		</div>
+		<div class="control-group">
+		   <div class="controls">
+		   <button class="btn" type="submit" name="find" id="find">Find</button>
+		   </div>
+		</div>
+	 </form>
+	
+	<br class="clr"/>
+	</div>
+	<div class="tab-content">
+		<div id="shops">
+		</div>
+	</div>
+</div>	
+	
+	<script src="/static/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			
+			$("#find").click(function(){
+				d_id=$('#district').val();
+				place=$('#place').val();
+				if(place == '' && d_id == ''){
+					alert('Check your entry');
+					return false;
+				}
+				else if(d_id == '' && place != '')
+				{
+					alert('Please select district...');
+					return false;
+				}
+				else{
+					$("#workshop").submit();
+				}
+			});
+			$("#place").autocomplete({
+				source:'{% url 'getPlace' %}',
+				minLength:1
+			});
+		});
+	</script>
+{% endblock %}

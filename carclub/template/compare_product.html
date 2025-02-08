@@ -1,0 +1,57 @@
+
+
+<h3>Spare Part Comparison <small class="pull-right"> 2 spare parts are compaired </small></h3>	
+	<hr class="soft"/>
+
+	<table id="compairTbl" class="table table-bordered" style="background:#202020;color:white">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>{{part1.0.part_name}} </th>
+                  <th>{{part2.0.part_name}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Details</td>
+                  <td style="text-align:center">
+					<p>
+						{{part1.0.details}}
+					</p>
+					<br/>
+				<img src="{{part1.0.path.url}}" class="img-resize-details" alt=""/>
+				<form class="form-horizontal qtyFrm">
+				<h3> {{part1.0.price}} RS</h3><br/>
+				 <a href="{% url 'addToCart' part1.0.id %}" class="btn btn-large btn-primary"> Add to <i class=" icon-shopping-cart"></i></a>
+				 <a href="{% url 'partDetails' part1.0.id %}" class="btn btn-large"><i class="icon-zoom-in"></i></a>
+				</form>
+				</td>
+                  <td>
+				  <p>
+					{{part2.0.details}}
+				</p>
+				<br/>
+				<img src="{{part2.0.path.url}}" class="img-resize-details" alt=""/>
+				
+				<form class="form-horizontal qtyFrm">
+				<h3> {{part2.0.price}} RS</h3>
+				<br/>
+				 <a href="{% url 'addToCart' part2.0.id %}" class="btn btn-large btn-primary"> Add to <i class=" icon-shopping-cart"></i></a>
+				 <a href="{% url 'partDetails' part2.0.id %}" class="btn btn-large"><i class="icon-zoom-in"></i></a>
+				</form>
+				  </td>
+                </tr>
+                <tr>
+                  <td>Brand</td>
+                  <td>{{part1.0.brand_id.brand_name}}</td>
+                  <td>{{part2.0.brand_id.brand_name}}</td>
+                </tr>
+                <tr>
+                  <td>Model</td>
+                  <td>{% for p in part1_model %}{{p.model_id.model_name}}{% if forloop.counter != part1_model.count %},{% endif %}{% endfor %}</td>
+                  <td>{% for p in part2_model %}{{p.model_id.model_name}}{% if forloop.counter != part2_model.count %},{% endif %}{% endfor %}</td>
+                </tr>
+		
+              </tbody>
+            </table>	
+	<hr class="soft"/>

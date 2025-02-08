@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li><a href="{% url 'login' %}">Login</a> <span class="divider">/</span></li>
+		<li class="active">Forget password?</li>
+    </ul>
+	<h3> FORGOT YOUR PASSWORD?</h3>	
+	<hr class="soft"/>
+	
+	<div class="row">
+		<div class="span9" style="min-height:900px">
+			<div class="well" style="background:#202020;color:white">
+			<h5>Reset your password</h5><br/>
+			Provide more information about your account.<br/><br/><br/>
+			<form method="post" action="{% url 'validateShopData' %}">
+			{% csrf_token %}
+			  <input type="hidden" name="username" id="username" value="{{username}}"/>
+			  <div class="control-group">
+				<label class="control-label" for="shop_name">Shop Name</label>
+				<div class="controls">
+				  <input class="span3"  type="text" name="shop_name" id="shop_name" placeholder="Shop Name" required/>
+				</div>
+			  </div>
+			  <div class="control-group">
+				<label class="control-label" for="phone">Phone</label>
+				<div class="controls">
+				  <input class="span3"  type="text" name="phone" id="phone" placeholder="Phone" pattern="^\d{10}$" required/>
+				</div>
+			  </div>
+			   <div class="control-group">
+				<label class="control-label" for="email">Email</label>
+				<div class="controls">
+				  <input class="span3"  type="email" name="email" id="email" placeholder="Email" required/>
+				</div>
+			  </div>
+			  <div class="controls">
+			  <button type="submit" class="btn block">Submit</button>
+			  </div>
+			</form>
+		</div>
+		</div>
+	</div>	
+	
+</div>
+	
+		<script src="/static/jquery.min.js"></script>
+		{% if msg %}
+			<script>
+				alert('{{msg}}');
+			</script>
+		{% endif %}
+{% endblock %}

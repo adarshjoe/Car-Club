@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>Order Status<span class="divider">/</span></li>
+		<li class="active">Review</li>
+    </ul>
+	<h3> Review</h3>
+	<hr class="soft"/>	
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form method="post" class="form-horizontal" action="{% url 'rateAndReviewAction' %}">
+		{% csrf_token %}
+		<input type="hidden" name="part_id" id="part_id" value="{{part_id}}"/>
+		<input type="hidden" name="oid" id="oid" value="{{oid}}"/>
+		<div class="control-group">
+			<label class="control-label" for="divrating">Your rating<sup></sup></label>
+			<div class="controls">
+			  <div id="divrating"></div><br/><input type="text" style="width:20px" name="rating" id="rating" value="0" readonly="true"/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="review">Review<sup></sup></label>
+			<div class="controls">
+			  <textarea id="review" name="review" id="review" rows="4" placeholder="Review" required></textarea>
+			</div>
+		 </div>
+		<div class="control-group">
+			
+			<div class="controls">
+			  <input type="submit" class="btn btn-large btn-success" value="Submit"/>
+			</div>
+		 </div>
+				
+		</form>
+	  </div>
+	</div>
+		<script src="/static/jquery.min.js"></script>
+		<link rel="stylesheet" href="/static/jquery.rateyo.css">
+		<script src="/static/jquery.rateyo.js"></script>
+		<script>
+			$("#divrating").rateYo({
+				starWidth:"20px",
+				normalFill:"white",
+				ratedFill:"yellow",
+				minValue:0,
+				maxValue:5,
+				onChange:function(data){
+					$("#rating").val(data);
+				}
+			});
+		</script>	
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+	
+{% endblock %}

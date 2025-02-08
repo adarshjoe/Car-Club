@@ -1,0 +1,88 @@
+{% load static %}
+<html>
+
+
+	<body>
+		<form method="post" action="{% url 'addOrder' %}">
+		{% csrf_token %}
+			{% for v in data %}
+				<table>
+					<tr>
+						<td><input type="hidden" id="cart_id" name="cart_id" value="{{v.id}}"/></td>
+						<td><input type="hidden" id="price" name="price" value="{{v.part_id.price}}"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><img src="{{v.part_id.path.url}}" height="80px" width="80px" alt="no pic"/></td>
+					</tr>
+					<tr>
+						<td>Part Name</td>
+						<td>{{v.part_id.part_name}}</td>
+					</tr>
+					<tr>
+						<td>Model</td>
+						<td>{{v.part_id.model_id.model_name}}</td>
+					</tr>
+					<tr>
+						<td>Brand</td>
+						<td>{{v.part_id.brand_id.brand_name}}</td>
+					</tr>
+					<tr>
+						<td>Count</td>
+						<td><input type="number" id="count" name="count" value="{{v.count}}" min="1"/></td>
+					</tr>
+					<tr>
+						<td>Total Price</td>
+						<td><input type="number" id="cost" name="cost" value="{{v.total_price}}" readonly="true"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="submit" value="Confirm Order"/></td>
+					</tr>
+				</table>
+			{% endfor %}
+		</form>
+		{% if msg %}
+		<script src="/static/jquery.min.js"></script>
+		<script>
+			$(document).ready(function(){
+
+			$('#count').on('change',function(){
+				count=parseFloat($('#count').val());
+				price=parseFloat($('#price').val());
+				cost=count*price;
+				$('#cost').val(cost.toFixed(2));
+			});
+
+			const $numberInput = $('#count');
+
+        	// Event listener to validate input on change
+        	$numberInput.on('input', function () {
+                	const value = $numberInput.val();
+                	// Use a regular expression to check for non-numeric characters or negative integers
+                	if (!/^\d+$/.test(value) || parseInt(value) < 1) {
+                    	// Set the input value to an empty string to block invalid input
+                    	$numberInput.val('');
+                	}
+            	});
+
+		});
+		</script>
+			{% if messages %}
+				{% for message in messages %}
+				<script>
+					alert('{{message}}');
+				</script>
+				{% endfor %}
+			{% endif %}
+	{% endblock %}
+					alert('{{msg}}');
+
+
+
+				</script>
+			{% endif %}
+
+
+	</body>
+</html>

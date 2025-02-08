@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Workshops</li>
+    </ul>
+	<h3> Workshops </h3>	
+	<hr class="soft"/>		
+	{% if msg %}
+		<label>{{msg}}</label>
+	{% else %}		
+	<table class="table table-bordered">
+                <tr>
+		  <th>Shop Name</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+		  <th>Place</th>
+                  <th>Username</th>
+		  <th>Status</th>
+                  <th>Actions</th>
+		</tr>
+		{% for v in data %}
+                <tr>
+                  <td>{{v.shop_name}}</td>
+		  <td>{{v.phone}}</td>
+                  <td>{{v.email}}</td>
+		  <td>{{v.place}}</td>
+		  <td>{{v.username}}</td>
+                  <td>{{v.status}}</td>
+		  <td>
+			<div class="btn-group-wrapper">
+				<a class="btn btn-accent" href="{% url 'workshopDetails' v.id %}">Details</a>
+				<a class="btn btn-secondary" href="{% url 'removeWorkshop' v.id %}">Remove</a>
+			</div>
+		  </td>
+                </tr>
+		{% endfor %}
+            </table>
+	{% endif %}
+	<br/>
+</div>
+		<script src="/static/jquery.min.js"></script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+		
+			
+		
+{% endblock %}

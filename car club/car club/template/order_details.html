@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li> View Orders<span class="divider">/</span></li>
+		<li class="active">Order Details</li>
+    </ul>
+	<h3> Order Details </h3>	
+	<hr class="soft"/>		
+	{% if msg %}
+		<label>{{msg}}</label>
+	{% else %}
+		<div class="tab-content">
+		
+		<div id="listView" class="shop-details">
+		<br/>
+		{% for v in data %}
+				<div class="row">	  
+					<div class="span3" style="margin-bottom: auto;">
+						<div class="image-frame" style="background: url('{{v.part_id.path.url}}');background-position: center;background-size: cover;"></div>
+					</div>
+					<div class="span9" style="padding: 0px;border: none;">
+					<h3 style="font-size:20px;text-transform: uppercase;">{{v.part_id.part_name}}{% if v.prebook_id != None %}<span style="float:right;font-size:15px">Prebooked : ID : {{v.prebook_id}}</span>{% endif %}</h3>				
+					<p style="font-size:15px">
+						<b>Brand  &nbsp	      : </b>&nbsp{{v.part_id.brand_id.brand_name}}<br/></br>
+						<b>Model  &nbsp	      : </b>&nbsp{% for p in part_model %}{{p.model_id.model_name}}{% if forloop.counter != part_model.count %},{% endif %}{% endfor %}<br/></br>
+						<b>Details &nbsp         : </b>&nbsp{{v.part_id.details}}<br/><br/>
+						<b>Price     &nbsp       : </b>&nbsp{{v.part_id.price}} RS<br/><br/>
+						<b>Buyer      &nbsp      : </b>&nbsp{{v.user_id.name}}<br/><br/>
+						<b>Contact Number  &nbsp : </b>&nbsp{{v.phone}}<br/><br/>
+						<b>Shipping Address &nbsp: </b>&nbsp{{v.address}}<br/><br/>
+						<b>Quantity        &nbsp : </b>&nbsp{{v.count}}<br/><br/>
+						<b>Total Price   &nbsp   : </b>&nbsp{{v.total_price}} RS<br/><br/>
+						<b>Date          &nbsp   : </b>&nbsp{{v.date}}<br/><br/>
+						<b>Time      &nbsp       : </b>&nbsp{{v.time}}<br/><br/>
+						<b>Status       &nbsp    : </b>&nbsp{{v.status}}<br/>
+			
+					</p>
+					<br>
+					{% if v.status == "pending" %}
+			
+						<div class="btn-group-wrapper" style="padding: 0px;">
+							<a class="btn btn-accent max-limit" href="{% url 'approveOrder' v.id %}">Approve Order</a>
+				
+							<a class="btn btn-secondary max-limit" href="{% url 'rejectOrder' v.id %}">Reject Order</a>
+						</div>
+					
+					{% elif v.status == "approved" %}
+			
+						<a class="btn btn-accent" href="{% url 'rejectOrder' v.id %}">Reject Order</a>
+			
+					{% endif %}
+					
+					</div>
+					
+				</div>
+			<hr class="soft"/>
+			{% endfor %}
+		</div>
+
+	
+		<hr class="soft"/>
+		</div>
+	{% endif %}
+
+</div>
+{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+
+		
+{% endblock %}

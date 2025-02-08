@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Spare Parts</li>
+    </ul>
+	<h3> Spare Parts </h3>	
+	<hr class="soft"/>
+	{% if msg %}
+		<lable>{{msg}}</label>
+	{% else %}
+	<div class="tab-content">
+	
+	<div id="listView" style="background:#202020;color:white">
+		<br/>
+		{% for v in data %}
+		<div class="row">	  
+			<div class="span2" style="padding-left:5em">
+				<img class="img-resize" src="{{v.part_obj.path.url}}" alt=""/>
+			</div>
+			<div class="span4">
+				<h3>{{v.part_name}}</h3>				
+				<hr class="soft"/>
+				<p>
+					Brand : {{v.brand_id.brand_name}}<br/>
+					Model : {{v.models}}<br/> 
+					Price : {{v.price}} RS <br/>
+					Stock : {{v.stock}}<br/>
+					Details : {{v.details}}
+					
+				</p>
+				<a class="btn" href="{% url 'updateSparePart' v.id %}">Update</a>
+				
+				<a class="btn" href="{% url 'deleteSparePart' v.id %}">Delete</a>
+				
+				<a class="btn" href="{% url 'viewSparePartReview' v.id %}">Reviews</a>
+				<br class="clr"/>
+			</div>
+			
+		</div>
+		<hr class="soft"/>
+		{% endfor %}
+		
+	</div>
+
+	</div>
+	{% endif %}
+	<div class="pagination">
+		{% if data.has_other_pages %}
+			<ul class="pagination" style="border:5px solid #202020;">
+				{% if data.has_previous %}
+					<li><a href="?page={{ data.previous_page_number }}&part_name={{part_name}}">&laquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&laquo;</span></li>
+				{% endif %}
+				{% for i in data.paginator.page_range %}
+					{% if data.number == i %}
+						<li class="active"><span>{{i}}<span class="sr-only">(current)</span></span></li>
+					{% else %}
+						<li><a href="?page={{i}}&part_name={{part_name}}">{{i}}</a></li>
+					{% endif %}
+				{% endfor %}
+				{% if data.has_next %}
+					<li><a href="?page={{ data.next_page_number }}&part_name={{part_name}}">&raquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&raquo;</span></li>
+				{% endif %}
+			</ul>
+		{% endif %}
+	</div>	
+	<br/>	
+
+</div>
+		
+		
+					
+					
+			
+{% endblock %}

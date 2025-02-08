@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Categories</li>
+    </ul>
+	<h3> Categories </h3>	
+	<hr class="soft"/>
+	
+	
+	{% if data %}
+		<table class="table table-bordered" style="vertical-align: middle;">
+                	<tr>
+                  		<th>Vehicle</th>
+		  		<th>Category</th>
+                  		<th>Action</th>
+			</tr>
+			{% for v in data %}
+               	 	<tr>
+                  		<td style="vertical-align:middle !important">{{v.vehicle_id.vehicle_name}}</td>
+		  		<td style="vertical-align:middle !important">{{v.category}}</td>
+		  		<td><div style="max-width: 100px;"><a class="btn-accent padded" href="{% url 'updateCategory' v.id %}">Update</a></div></td>
+                	</tr>
+			{% endfor %}
+                </table>
+		
+		<br/>
+		
+	{% else %}	
+	
+		<label>None</label>
+		
+	{% endif %}
+</div>	
+{% endblock %}

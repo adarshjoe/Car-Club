@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	
+	<div class="span9">
+    	<ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Add Spare Part</li>
+    	</ul>
+	<h3>Add Spare Part</h3>	
+	<hr class="soft"/>
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" method="post" action="{% url 'addSparePartsAction' %}" enctype="multipart/form-data">
+	{% csrf_token %}
+		
+		<div class="control-group">
+			<label class="control-label" for="part_img">Image<sup>*</sup></label>
+			<div class="controls">
+			  <input type="file" name="part_img" id="part_img" required/>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="vehicle">Vehicle<sup>*</sup></label>
+			<div class="controls">
+			  <select id="vehicle" name="vehicle" required>
+				<option value="">--select--</option>
+				{% for v in vehicles %}
+				    <option value="{{v.id}}">{{v.vehicle_name}}</option>
+				{% endfor %}
+			</select>
+			</div>
+		 </div>
+		 	  
+		<div class="control-group">
+			<label class="control-label" for="brand">Brand<sup>*</sup></label>
+			<div class="controls">
+			  <select id="brand" name="brand" required>
+				<option value="">--select--</option>
+			  </select>
+			</div>
+		 </div>
+
+		<div class="control-group">
+			<label class="control-label" for="model">Model<sup>*</sup></label>
+			<div class="controls" id="modeldiv" style="margin-top:5px">
+			  <span>Choose a brand to display models...</span>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="category">Category<sup>*</sup></label>
+			<div class="controls">
+			  <select id="category" name="category" required>
+				<option value="">--select--</option>
+			  </select>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="part_name">Spare Part Name<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="part_name" id="part_name" placeholder="Spare Part Name" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="details">Details<sup>*</sup></label>
+			<div class="controls">
+			 <textarea name="details" id="details" rows="5" placeholder="Details" required></textarea>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="price">Price<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="price" id="price" placeholder="Price" onkeypress="return isNumberKey(event)" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="stock">Stock<sup>*</sup></label>
+			<div class="controls">
+			  <input type="number" name="stock" id="stock" placeholder="Stock" required/>
+			</div>
+		 </div>
+		
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Add" onclick="return modelValidation()"/>
+			</div>
+		</div>	
+		
+	</form>
+	
+</div>
+</div>
+
+	<script src="/static/jquery.min.js"></script>
+
+	<script>
+		function isNumberKey(evt){
+			var charCode=(evt.which) ? evt.which : evt.keyCode;
+			if(charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+				return false;
+
+			return true;
+		}
+		$(document).ready(function(){
+			$("#vehicle").change(function(){
+				vid=$("#vehicle").val();
+				$.ajax({
+					url:"{% url 'getBrand' %}",
+					data:{'vehicle_id':vid},
+					success:function(data){
+						$("#brand").html(data);
+					}
+				});
+				
+				$.ajax({
+					url:"{% url 'getCategory' %}",
+					data:{'vehicle_id':vid},
+					success:function(data){
+						$("#category").html(data);
+					}
+				});
+			});
+		
+			$("#brand").change(function(){
+				bid=$("#brand").val();
+				$.ajax({
+					url:"{% url 'getModel' %}",
+					data:{'brand_id':bid},
+					success:function(data){
+						$("#modeldiv").html(data);
+					}
+				});
+			});
+
+		});
+		
+	</script>
+
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

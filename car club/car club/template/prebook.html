@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>Spare Parts<span class="divider">/</span></li>
+		<li class="active">Prebook</li>
+    </ul>
+	<h3>Prebook</h3>
+	<hr class="soft"/>
+	<div class="tab-content">	
+	<div class="row">
+	    {% for v in data %}
+				  
+			<div id="gallery" class="span3">
+            			
+				<div class="image-frame" style="background:url('{{v.path.url}}');background-position: center;background-size: cover;"></div>
+			</div>
+			<div class="span6">
+				<h3>{{v.part_name}}</h3>
+				  <div class="control-group">
+					<label class="control-label"><span style="font-size:20px">{{v.price}} .RS</span></label>
+				  </div>
+			
+				<br class="clr"/>
+			</div>
+			<br/>
+			<br/>
+			
+			<div class="span9" style="box-sizing: border-box;">
+            <div id="myTabContent" class="tab-content">
+              <div class="tab-pane fade active in" id="home">
+		<br/>	  
+                <table class="table table-bordered">
+				<tbody>
+				<tr class="techSpecRow"><th colspan="2" style="font-size: 16px;font-weight: 600;padding: 15px 10px;">Spare Part Details</th></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1"><b>Brand:</b> </td><td class="techSpecTD2">{{v.brand_id.brand_name}}</td></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1"><b>Model:</b></td><td class="techSpecTD2">{% for p in part_model %}{{p.model_id.model_name}}{% if forloop.counter != part_model.count %},{% endif %}{% endfor %}</td></tr>
+				{% if v.stock == '0' %}
+				<tr class="techSpecRow"><td class="techSpecTD1"><b>Stock:</b></td><td class="techSpecTD2">{{v.stock}}</td></tr>
+				{% else %}
+				<tr class="techSpecRow"><td class="techSpecTD1"><b>Stock:</b></td><td class="techSpecTD2">{{v.stock}}</td></tr>
+				{% endif %}
+				<tr class="techSpecRow"><td class="techSpecTD1"><b>Seller:</b></td><td class="techSpecTD2">{{v.shop_id.shop_name}}</td></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1"><b>Seller Address:</b></td><td class="techSpecTD2">{{v.shop_id.address}}</td></tr>
+				</tbody>
+				</table>
+				
+				<h5 style="font-size: 16px;font-weight: 600;">Features</h5>
+				<p>
+				    {{ v.details }}<br/>
+				</p>
+
+              </div>
+		
+	</div>
+</div>
+{% endfor %}
+</div>
+</div>
+	<div class="well" style="background:#202020;color:white;">
+		<br>
+		<form class="form-horizontal" method="post" action="{% url 'prebookAction' %}">
+		{% csrf_token %}
+		{% for v in data %}	
+		
+		<input type="hidden" name="pid" id="pid" value="{{v.id}}"/>
+		<input type="hidden" name="sid" id="sid" value="{{v.shop_id_id}}"/>	  
+		<input type="hidden" name="price" id="price" value="{{v.price}}"/>
+		<div class="control-group">
+			<label class="control-label" for="count">Quantity<sup>*</sup></label>
+			<div class="controls">
+			  <input type="number" name="count" id="count" placeholder="Quantity" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="cost">Total Cost<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="cost" id="cost" placeholder="Total Cost" readonly="true"/> RS 
+			</div>
+		 </div>
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-accent padded" type="submit" value="Prebook" />
+			</div>
+		</div>
+	     	{% endfor %}		
+	</form>
+	</div>
+</div>
+	
+	
+	<script src="/static/jquery.min.js"></script>	
+	<script>
+		$(document).ready(function(){
+		$('#count').change(function(){
+			count=parseFloat($('#count').val());
+			price=parseFloat($('#price').val());
+			cost=count*price;
+			$('#cost').val(cost.toFixed(2));
+		});
+
+		});
+	</script>
+	<script>
+		const $numberInput = $('#count');
+		// Event listener to validate input on change
+		$numberInput.on('input', function () {
+				const value = $numberInput.val();
+				// Use a regular expression to check for non-numeric characters or negative integers
+				if (!/^\d+$/.test(value) || parseInt(value) < 1) {
+					// Set the input value to an empty string to block invalid input
+					$numberInput.val('');
+				}
+			});
+	</script>
+		
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

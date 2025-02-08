@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Login</li>
+    </ul>
+	<h3> Login</h3>	
+	<hr class="soft"/>
+	
+	<div class="row">
+		
+		</div>
+		<div class="span1"> &nbsp&nbsp;</div>
+		<div class="span1"> &nbsp&nbsp;</div>
+		<div class="span4">
+			<div class="well" style="background:#202020;color:white">
+			<h5>ALREADY REGISTERED ?</h5>
+			<form method="post" action="{% url 'loginAction' %}">
+			{% csrf_token %}
+			  <div class="control-group">
+				<label class="control-label" for="username">Username</label>
+				<div class="controls">
+				  <input class="span3"  type="text" id="username" name="username" placeholder="Username" required>
+				</div>
+			  </div>
+			  <div class="control-group">
+				<label class="control-label" for="password">Password</label>
+				<div class="controls">
+				  <input type="password" class="span3"  id="password" name="password" placeholder="Password" required>
+				</div>
+			  </div>
+			  <div class="control-group">
+				<div class="controls">
+				  <button type="submit" class="btn">Sign in</button> 
+				</div>
+				<br/>
+				<a style="color:white" href="{% url 'forgotPassword' %}">Forgot password?</a>
+			  </div>
+			</form>
+		</div>
+		</div>
+	</div>	
+	
+
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+
+{% endblock %}

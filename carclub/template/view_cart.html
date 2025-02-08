@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active"> SHOPPING CART</li>
+    </ul>
+	<h3>  SHOPPING CART </h3>	
+	<hr class="soft"/>		
+	{% if not data %}
+		<label>Empty cart</label>
+	{% else %}		
+	<table class="table table-bordered" style="background:#202020;color:white">
+                <tr>
+		  <th></th>
+                  <th>Spare Part</th>
+		  <th>Quantity</th>
+                  <th>Total Price</th>
+                  <th></th>
+		  <th></th>
+		</tr>
+		{% for v in data %}
+                <tr>
+                  <td> <img class="img-resize-user"  style="border:5px solid #fff;" src="{{v.part_id.path.url}}" alt=""/></td>
+		  <td>{{v.part_id.part_name}}</td>
+		  <td>{{v.count}}</td>
+                  <td>{{v.total_price}}</td>
+		  <td><a id="select" class="btn" href="{% url 'selectOrder' v.id %}">Select</a></td>
+		  <td><a class="btn" href="{% url 'deleteFromCart' v.id %}">Remove</a></td>
+                </tr>
+		{% endfor %}
+            </table>
+	{% endif %}
+	<br/>
+	 
+	{% if cart %}
+	<div class="tab-content">
+	<div class="row" style="background:#202020;color:white;padding-left:5em">
+	   <br/></br>
+	    {% for v in cart %}
+				  
+			<div id="gallery" class="span3">
+            			
+					<img class="img-resize-details" src="{{v.part_id.path.url}}" style="width:100%" alt="no pic"/>
+			 	
+			</div>
+			<div class="span6">
+				<h3>{{v.part_id.part_name}}</h3>
+				<hr class="soft"/>
+				  <div class="control-group">
+					<label class="control-label"><span style="font-size:20px">{{v.part_id.price}} .RS</span></label>
+				  </div>
+			
+				<br class="clr"/>
+			</div>
+			<br/>
+			<br/>
+			
+			<div class="span9">
+            <div id="myTabContent" class="tab-content">
+              <div class="tab-pane fade active in" id="home" style="padding-right:130px">
+		<br/>	  
+                <table class="table table-bordered">
+				<tbody>
+				<tr class="techSpecRow"><th colspan="2">Spare Part Details</th></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1">Brand: </td><td class="techSpecTD2">{{v.part_id.brand_id.brand_name}}</td></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1">Model:</td><td class="techSpecTD2">{% for p in part_model %}{{p.model_id.model_name}}{% if forloop.counter != part_model.count %},{% endif %}{% endfor %}</td></tr>
+				{% if v.stock == '0' %}
+				<tr class="techSpecRow"><td class="techSpecTD1">Stock:</td><td class="techSpecTD2">{{v.part_id.stock}}</td></tr>
+				{% else %}
+				<tr class="techSpecRow"><td class="techSpecTD1">Stock:</td><td class="techSpecTD2">{{v.part_id.stock}}</td></tr>
+				{% endif %}
+				<tr class="techSpecRow"><td class="techSpecTD1">Seller:</td><td class="techSpecTD2">{{v.part_id.shop_id.shop_name}}</td></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1">Seller Address:</td><td class="techSpecTD2">{{v.part_id.shop_id.address}}</td></tr>
+				</tbody>
+		</table>
+				
+				<h5>Features</h5>
+				<p>
+				    {{ v.part_id.details }}<br/>
+				</p>
+				<br/><br/>
+				
+              </div>
+		
+	   </div>
+	 </div>
+	{% endfor %}
+	</div>
+	<br/>
+	<div class="well" style="background:#202020;color:white">
+	<br/></br>
+		 <form class="form-horizontal" method="post" action="{% url 'addOrder' %}">
+	    	{% csrf_token %}
+		{% for v in cart %}
+			
+			<input type="hidden" id="cart_id" name="cart_id" value="{{v.id}}"/>
+			<input type="hidden" id="price" name="price" value="{{v.part_id.price}}"/>
+			<div class="control-group">
+				<label class="control-label" for="count">Quantity<sup></sup></label>
+				<div class="controls">
+			  	<input type="number" name="count" id="count" placeholder="Quantity" value="{{v.count}}" required />
+				</div>
+		 	</div>
+			<div class="control-group">
+				<label class="control-label" for="cost">Total Cost<sup></sup></label>
+				<div class="controls">
+			  	<input type="text" name="cost" id="cost" placeholder="Total Cost" value="{{v.total_price}}" readonly="true"/> RS 
+				</div>
+		 	</div>
+			<div class="control-group">
+				<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Confirm Order" />
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+				
+				<a class="btn btn-large btn-danger" href="{% url 'viewCart' %}">Cancel</a>
+				</div>
+			</div>
+		{% endfor %}
+		</form>
+	</div>
+	</div>
+	{% endif %}
+	
+</div>
+	
+	<script src="/static/jquery.min.js"></script>
+	<script>
+	$(document).ready(function(){
+		$('#count').change(function(){
+			count=parseFloat($('#count').val());
+			price=parseFloat($('#price').val());
+			cost=count*price;
+			$('#cost').val(cost.toFixed(2));
+		});
+		
+
+	});
+	</script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

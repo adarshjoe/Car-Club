@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Add Category</li>
+    </ul>
+	<h3>Add Category</h3>
+	<hr class="soft"/>	
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" method="post" action="{% url 'addCategoryAction' %}">
+	{% csrf_token %}
+		<div class="control-group">
+			<label class="control-label" for="vehicle">Vehicle<sup>*</sup></label>
+			<div class="controls">
+			  <select id="vehicle" name="vehicle" required>
+				<option value="">--select--</option>
+				{% for v in data %}
+					<option value="{{v.id}}">{{v.vehicle_name}}</option>
+				{% endfor %}
+			</select>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="category">Category<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="category" id="category" placeholder="category" required/>
+			</div>
+		 </div>
+		 	  
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Add" />
+			</div>
+		</div>		
+	</form>
+	
+</div>
+</div>
+		<script src="/static/jquery.min.js"></script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

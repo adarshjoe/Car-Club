@@ -1,0 +1,28 @@
+<html>
+	<body>
+		{% if msg %}
+			<label>{{msg}}</label>
+		{% else %}
+		{% for v in data %}
+			<table>
+				<tr>
+					<td></td>
+					<td><img src="{{v.part_id.path.url}}" height="70px" width="70px" alt="no pic"/></td>
+				</tr>
+				<tr>
+					<td>Part Name</td>
+					<td>{{v.part_id.part_name}}</td>
+				</tr>
+				<tr>
+					<td>Details</td>
+					<td>{{v.part_id.details}}</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><a href="{% url 'rateAndReview' v.part_id_id %}">Rate & Review</a></td>
+				</tr>
+			</table>
+		{% endfor %}
+		{% endif %}
+	</body>
+</html>

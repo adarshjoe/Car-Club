@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Edit Brand</li>
+    </ul>
+	<h3>Edit Brand</h3>
+	<hr class="soft"/>	
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" method="post" action="{% url 'editBrandAction' %}">
+	{% csrf_token %}
+		{% for v in data %}
+			<input type="hidden" name="bid" value="{{v.id}}"/>
+		<div class="control-group">
+			<label class="control-label" for="vehicle">Vehicle<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="vehicle" id="vehicle" placeholder="vehicle" value="{{v.vehicle_id.vehicle_name}}" readonly="true" required/>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="brand">Brand<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="brand" id="brand" placeholder="Brand" value="{{v.brand_name}}" required/>
+			</div>
+		 </div>
+		 	  
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Update" />
+			</div>
+		</div>	
+		{% endfor %}	
+	</form>
+	<a href="{% url 'viewBrand' %}" class="btn btn-large pull-right">Back</a>
+</div>
+</div>
+		<script src="/static/jquery.min.js"></script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

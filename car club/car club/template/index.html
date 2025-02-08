@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="span9">
+	{% if 'user_id' in request.session %}
+
+		<h4>Latest Parts </h4>
+		
+		<hr class="soft"/>
+			{% if part %}
+				
+			  <ul class="thumbnails">
+				{% for p in part %}
+				<li class="span3">
+					<div class="thumbnail" style="padding: 0px;overflow: hidden;">
+					<a  href="{% url 'partDetails' p.id %}">
+						<div class="img-preview" style="background-image:url('{{p.part_obj.path.url}}');background-size: cover;background-position: center;">
+						</div>
+					</a>
+					
+					<div class="caption">
+						<h5 style="color:white">{{p.part_name}}</h5>
+						<p style="color:white"> 
+						  Brand : {{p.brand_id.brand_name}}<br/>
+						  Models : {{p.models}} <br/>
+						  Price : {{p.price}} RS
+						</p>
+					  </div>
+					
+					  <div class="btn-wrap">
+						
+						<div class="btn-group-wrap">
+							<a class="btn" href="{% url 'partDetails' p.id %}">View Details</a>
+							<a class="btn btn-review" href="{% url 'viewReview' p.id %}">Reviews</a>
+						</div>
+						<a class="btn add-to-cart-btn" href="{% url 'addToCart' p.id %}">
+							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+							Add to Cart
+						</a>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+			  </ul>	
+			  <div>
+				<a class="btn view-more-btn"  href="{% url 'viewSparePartsUser' %}">Check More
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+				</a>
+			</div>
+			{% else %}
+				<label>None</label>
+			{% endif %}
+			<hr class="soft"/>
+	{% elif 'spare_shop_id' in request.session %}
+
+		<h4>Latest Orders</h4>
+		<hr class="soft"/>
+			{% if orders %}
+			  <ul class="thumbnails">
+				{% for o in orders %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					<br/>
+					<img class="img-resize" src="{{o.part_id.path.url}}" class="img-resize" alt=""/>
+					<div class="caption" style="color:white">
+					  <h5>{{o.part_id.part_name}}</h5>
+					  <p> 
+						Buyer : {{o.user_id.username}} <br/>
+						Quantity : {{o.count}}<br/>
+						Total Price : {{o.total_price}} RS<br/>
+						Status : {{o.status}}
+					  </p>
+					 
+					  <h4 style="text-align:center"><a class="btn" href="{% url 'orderDetails' o.id %}">Details</a></h4>
+						 
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+				<a class="btn" style="border:5px solid #202020;" href="{% url 'viewOrders' %}">Check More</a>
+			{% else %}
+				<label>None</label>
+			{% endif %}
+		<hr class="soft"/>
+		<h4>Your Latest Products</h4>
+		<hr class="soft"/>
+			{% if latest_parts %}
+			  <ul class="thumbnails">
+				
+				{% for p in latest_parts %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					<br/>
+					<img class="img-resize" src="{{p.part_obj.path.url}}" class="img-resize" alt=""/>
+					<div class="caption" style="color:white">
+					  <h5>{{p.part_name}}</h5>
+					  <p> 
+						Brand : {{p.brand_id.brand_name}}<br/>
+						Models : {{p.models}} <br/>
+						Price : {{p.price}} RS<br/>
+						Stock : {{p.stock}}
+					  </p>
+					 
+					  <h4 style="text-align:center"><a class="btn" href="{% url 'updateSparePart' p.id %}">Update</a></h4>
+						 
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			{% else %}
+				<label>None</label>
+			{% endif %}
+			<hr class="soft"/>
+
+	{% elif 'workshop_id' in request.session %}
+
+		<h4>Latest Added Services </h4>
+		<hr class="soft"/>
+		{% if services %}
+			  <ul class="thumbnails">
+				{% for s in services %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					</br>
+					<img class="img-resize" src="{{s.service_img.url}}" alt=""/>
+					<div class="caption" style="color:white">
+					  <h5 style="font-size:18px">{{s.service}}</h5>
+					 <p style="font-size:17px">
+						Status : {{s.status}}
+					 </p>
+					  <h4 style="text-align:center">
+						<a class="btn" href="{% url 'updateService' s.id %}">Update</a>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			
+		{% else %}
+			<label>None</label>
+		{% endif %}
+		<hr class="soft"/>
+		<h4>Latest Reviews </h4>
+		<hr class="soft"/>
+		{% if workshop_reviews %}
+			<div class="tab-content">
+		
+	   		 <div id="listView" style="background:#202020;color:white">
+			<br/>
+			{% for w in workshop_reviews %}
+				<div class="row">	  
+					<div class="span2" style="padding-left:5em">
+						<img class="img-resize-user" src="{{w.user_id.path.url}}" alt=""/>
+					</div>
+					<div class="span4">
+					<h3 style="font-size:20px">{{w.user_id.username}}</h3>				
+					<hr class="soft"/>
+					<p>
+						<div class="jstars"
+							data-value="{{w.rating}}"
+							data-total-stars="5"
+							data-color="#FFFF00"
+							data-empty-color="white"
+							data-size="25px">
+						</div><br/><input type="text" style="width:27px" name="rating" id="rating" value="{{w.rating}}" readonly="true"/><br/>
+						Review : {{w.review}}<br/><br/>
+						Date : {{w.date}}
+
+					</p>
+					
+					</div>
+					
+				</div>
+			<hr class="soft"/>
+		   {% endfor %}
+	</div>
+	<a class="btn" style="border:5px solid #202020;" href="{% url 'viewReviewsByWorkshop' %}">Check More</a>
+	
+	{% else %}
+		<label>None</label>
+	{% endif %}
+	<hr class="soft"/>
+
+	{% elif 'admin_id' in request.session %}
+
+		<h4>Latest Sales </h4>
+		<hr class="soft"/>
+		{% if sales %}
+			  <ul class="thumbnails">
+				{% for s in sales %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					</br>
+					<div class="part-img m-auto" style="background: url('{{s.shop_id.logo.url}}');background-size: cover; background-position:center ">
+
+					</div>
+					<div class="caption">
+					  <h5 style="color:white">{{s.shop_id.username}}</h5>
+					  <p style="color:white"> 
+						<b>Spare Part Name :</b> {{s.order_id.part_id.part_name}} <br/>
+						<b>Amount :</b> {{s.amount}} RS<br/>
+						<b>Seller :</b> {{s.shop_id.username}}<br/>
+						<b>Status :</b> {{s.status}}
+					  </p>
+					 
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			<div style="display: flex;">
+				<a class="btn btn-accent" href="{% url 'salesReport' %}">Check More</a>
+			</div>
+		
+		{% else %}
+			<label>None</label>
+		{% endif %}
+		<hr class="soft"/>
+		<h4>Latest Spare Part Shop Registrations </h4>
+		<hr class="soft"/>
+		{% if shop_signups %}
+			  <ul class="thumbnails">
+				{% for s in shop_signups %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					<br/>
+					<div class="part-img m-auto" style="background: url('{{s.logo.url}}');background-size: cover; background-position:center">
+
+					</div>
+					<div class="caption">
+					  <h5 style="color:white">{{s.username}}</h5>
+					  <p style="color:white"> 
+						<b>Phone :</b> {{s.phone}} <br/>
+						<b>Email :</b> {{s.email}} <br/>
+						<b>Status :</b> {{s.status}}<br/>
+					  </p>
+					 <h4 style="text-align:center"><a class="btn btn-accent" href="{% url 'shopDetails' s.id %}">Details</a></h4>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			
+		
+		{% else %}
+			<label>None</label>
+		{% endif %}
+		<hr class="soft"/>
+		<h4>Latest Workshop Registrations </h4>
+		<hr class="soft"/>
+		{% if workshop_signups %}
+			  <ul class="thumbnails">
+				{% for w in workshop_signups %}
+				<li class="span3">
+				  <div class="thumbnail" style="background:#202020;color:white">
+					<br/>
+					<img class="img-resize" src="{{w.logo.url}}" class="img-resize" alt=""/>
+					<div class="caption">
+					  <h5 style="color:white">{{w.username}}</h5>
+					  <p style="color:white"> 
+						Phone : {{w.phone}} <br/>
+						Email : {{w.email}} <br/>
+						Status : {{w.status}}<br/>
+					  </p>
+					 <h4 style="text-align:center"><a class="btn" href="{% url 'workshopDetails' w.id %}">Details</a></h4>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+			
+		</div>
+		
+		{% else %}
+			<label>None</label>
+		{% endif %}
+		<hr class="soft"/>
+
+	{% else %}
+		
+		<h4>Latest Parts</h4>
+		<hr class="soft"/>
+			{% if part %}
+			  <ul class="thumbnails">
+				{% for p in part %}
+				<li class="span3">
+				  <div class="thumbnail" style="padding: 0px;overflow: hidden;">
+					<a  href="{% url 'partDetails' p.id %}">
+						<div class="img-preview" style="background-image:url('{{p.part_obj.path.url}}');background-size: cover;background-position: center;">
+						</div>
+					</a>
+					<div class="caption">
+					  <h5 style="color:white">{{p.part_name}}</h5>
+					  <p style="color:white"> 
+						Brand : {{p.brand_id.brand_name}}<br/>
+						Models : {{p.models}} <br/>
+						Price : {{p.price}} RS
+					  </p>
+					</div>
+					<div class="btn-wrap">
+						
+						<div class="btn-group-wrap">
+							<a class="btn" href="{% url 'partDetails' p.id %}">View Details</a>
+							<a class="btn btn-review" href="{% url 'viewReview' p.id %}">Reviews</a>
+						</div>
+						<a class="btn add-to-cart-btn" href="{% url 'login' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>Add to Cart</i></a>
+					</div>
+				  </div>
+				</li>
+				{% endfor %}
+				
+				
+			  </ul>	
+				<div>
+					<a class="btn view-more-btn"  href="{% url 'viewSparePartsUser' %}">Check More
+						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+					</a>
+				</div>
+			{% else %}
+				<label>None</label>
+			{% endif %}
+			<hr class="soft"/>
+
+	{% endif %}
+	
+</div>
+</div>
+
+<script src="/static/jquery.min.js"></script>
+<script src="/static/jstars.min.js"></script>	
+	
+
+{% endblock %}
+
+	
+	

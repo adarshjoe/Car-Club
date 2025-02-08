@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Prebookings</li>
+    </ul>
+	<h3> Prebookings </h3>	
+	<hr class="soft"/>		
+	{% if msg %}
+		<label>{{msg}}</label>
+	{% else %}
+		<div class="tab-content">
+		
+		<div id="listView" style="background:#202020;color:white">
+		<br/><br/>
+		{% for v in data %}
+				<div class="row">	  
+					<div class="span2" style="padding-left:5em">
+						<img class="img-resize-user" src="{{v.part_id.path.url}}" alt=""/>
+					</div>
+					<div class="span4">
+					<h3 style="font-size:20px">{{v.part_id.part_name}}</h3>				
+					<hr class="soft"/>
+					<p style="font-size:15px">
+						Id : {{v.id}}<br/><br/>
+						Brand : {{v.part_id.brand_id.brand_name}}<br/><br/>
+						Model : {{v.models}}<br/><br/>
+						Details : {{v.part_id.details}}<br/><br/>
+						Price : {{v.part_id.price}}<br/><br/>
+						Requested User : {{v.user_id.name}}<br/><br/>
+						Quantity : {{v.count}}<br/><br/>
+						Date : {{v.date}}<br/><br/>
+						Time : {{v.time}}<br/><br/>
+						Status : {{v.status}}<br/>
+			
+					</p>
+					{% if v.status == 'pending' %}
+					  <a class="btn" href="{% url 'approvePrebook' pid=v.id page=data.number %}">Approve</a>
+					  <a class="btn" href="{% url 'rejectPrebook' pid=v.id page=data.number %}">Reject</a>
+					{% endif %}
+					{% if v.status == 'approved' %}
+					  <a class="btn" href="{% url 'rejectPrebook' pid=v.id page=data.number %}">Reject</a>
+					{% endif %}
+					</div>
+					
+				</div>
+			<hr class="soft"/>
+			{% endfor %}
+		</div>
+
+	
+		<hr class="soft"/>
+		</div>
+	{% endif %}
+	
+	<div class="pagination">
+		{% if data.has_other_pages %}
+			<ul class="pagination" style="border:5px solid #202020;">
+				{% if data.has_previous %}
+					<li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&laquo;</span></li>
+				{% endif %}
+				{% for i in data.paginator.page_range %}
+					{% if data.number == i %}
+						<li class="active"><span>{{i}}<span class="sr-only">(current)</span></span></li>
+					{% else %}
+						<li><a href="?page={{i}}">{{i}}</a></li>
+					{% endif %}
+				{% endfor %}
+				{% if data.has_next %}
+					<li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&raquo;</span></li>
+				{% endif %}
+			</ul>
+		{% endif %}
+	</div>
+	
+<br/>
+
+		
+</div>
+	<script src="/static/jquery.min.js"></script>
+	{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+	{% endif %}
+		
+{% endblock %}

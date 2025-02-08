@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	
+	<div class="span9">
+    	<ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Add Services</li>
+    	</ul>
+	<h3>Add Services</h3>
+	<hr class="soft"/>	
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" method="post" action="{% url 'addServiceAction' %}" enctype="multipart/form-data">
+	{% csrf_token %}
+		<div class="control-group">
+			<label class="control-label" for="upload">Photo<sup>*</sup></label>
+			<div class="controls">
+			  <input type="file" name="upload" id="upload" required/>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="service">Service<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="service" id="service" placeholder="Service" required/>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="description">Description<sup>*</sup></label>
+			<div class="controls">
+			  <textarea name="description" id="description" placeholder="Description" rows="5" required></textarea>
+			</div>
+		 </div>
+		
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Add" />
+			</div>
+		</div>	
+		
+	</form>
+	
+</div>
+</div>
+
+
+		<script src="/static/jquery.min.js"></script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

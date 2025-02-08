@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Sales Report</li>
+    </ul>
+	<h3> Sales Report </h3>	
+	<hr class="soft"/>
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" id="sales" method="get" action="{% url 'getTransactions' %}">
+	{% csrf_token %}
+		<div class="control-group">
+		  <label class="control-label" for="shop">Spare Part Shop<sup></sup></label>
+		  
+			<div class="controls">
+			<select name="shop" id="shop" required>
+				<option value="">--select--</option>
+				{% for v in shops %}
+					<option value="{{v.id}}">{{v.username}}</option>
+				{% endfor %}
+			</select>
+			</div>
+		</div>
+		
+		<div class="control-group">
+		   <div class="controls">
+		   <button class="btn" type="submit" name="view" id="view">View Sales Report</button>
+		   </div>
+		</div>
+	 </form>
+	
+	<br class="clr"/>
+	</div>
+	<hr class="soft"/>
+	{% if shopdetails %}
+		
+		<div class="tab-content">
+		
+		{% for v in shopdetails %}
+				<div class="row" style="background:#202020;color:white">
+				<br/><br/>	  
+					<div class="span2" style="padding-left:5em">
+						<img class="img-resize-user" style="border:5px solid #fff;"  src="{{v.logo.url}}" alt=""/>
+					</div>
+					<div class="span4">
+					<h3 style="font-size:20px">{{v.username}}</h3>				
+					<hr class="soft"/>
+					<p style="font-size:15px">
+						Shop Name : {{v.shop_name}}<br/><br/>
+						Address : {{v.address}}<br/><br/>
+						District : {{v.district_id.district_name}}<br/></br/>
+						Place : {{v.place}}<br/><br/>
+						Phone : {{v.phone}}<br/><br/>
+						Email : {{v.email}}<br/><br/>
+						
+						
+					</p>
+					
+				</div>
+			
+		{% endfor %}
+		</div>
+	{% endif %}
+	<br/>
+	{% if msg %}
+		<br/>
+		<label style="font-weight:bold">{{msg}}</label>
+	{% else %}	
+	
+		{% if data %}
+		<table class="table table-bordered" style="background:#202020;color:white">
+                	<tr>
+                  		<th>Spare Part Name</th>
+		  		<th>Buyer Id</th>
+		 		 <th>Amount</th>
+		 		 <th>Date</th>
+				<th>Status</th>
+                  		<th></th>
+			</tr>
+			{% for v in data %}
+               	 	<tr>
+                  		<td>{{v.order_id.part_id.part_name}}</td>
+		  		<td>{{v.user_id.username}}</td>
+		  		<td>{{v.amount}}</td>
+                 		 <td>{{v.date}}</td>
+				<td>{{v.status}}</td>
+		  		<td><a class="btn" href="{% url 'updateStatus' v.id %}">Share Received</a></td>
+                	</tr>
+			{% endfor %}
+                </table>
+		{% endif %}
+		<br/>
+	{% endif %}
+</div>	
+</div>		
+
+	<script src="/static/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			
+			$("#view").click(function(){
+					shop_id=$("#shop").val();
+					if(shop_id == ''){
+						alert('Select A shop');
+						return false;
+					}
+					else{
+						$("#sales").submit();
+					}
+
+			});
+		});
+	</script>
+		
+{% endblock %}

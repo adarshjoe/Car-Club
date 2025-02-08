@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>View Orders<span class="divider">/</span></li>
+		<li class="active">Payment Details</li>
+    </ul>
+	<h3> Payment Details</h3>
+	<hr class="soft"/>
+		
+	<div class="well" style="background:#202020;color:white;padding-left:5em">
+		<div class="row">
+		
+			<div class="span4" style="font-size:17px">
+				{% for v in data %}
+				<p style="font-size:17px">
+					 	        <img src="{{v.order_id.part_id.path.url}}" class="img-resize-user"/><br/><br/>
+		 			Spare Part      : {{v.order_id.part_id.part_name}}<br/><br/>
+			  		Buyer Name       : {{v.user_id.name}}<br/><br/>
+					Amount Paid     : {{v.amount}} RS<br/><br/>
+					Transaction Key : {{v.transaction_key}}<br/><br/>
+					Date		: {{v.date}}<br/><br/>
+							<label style="color:red">Warning:Secure Transaction Key</label><br/>
+				</p>		
+			
+			{% endfor %}	
+			</div>	
+		</div>
+					
+				
+			
+	</div>
+	</div>	
+{% endblock %}

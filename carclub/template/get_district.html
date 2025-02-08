@@ -1,0 +1,8 @@
+<html>
+	<body>
+		<option value="">--select--</option>
+		{% for d in districts %}
+			<option value="{{d.id}}">{{d.district_name}}</option>
+		{% endfor %}
+	</body>
+</html>

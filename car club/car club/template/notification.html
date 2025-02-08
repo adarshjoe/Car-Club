@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Notifications</li>
+    </ul>
+	<h3> Notifications </h3>	
+	<hr class="soft"/>
+	{% if data %}
+		<div class="tab-content">
+	
+	<div id="listView" style="background:#202020;color:white">
+	<br/>
+		{% for v in data %}
+
+		
+
+		    <div class="row">
+			{% if v.table == 'order_tb' %}
+
+				<div class="span2" style="padding-left:5em">
+					<img class="img-resize" src="{{v.order_id.part_id.path.url}}" alt=""/>
+				</div>
+				<div class="span4">
+
+					<h3>Your order for {{v.order_id.part_id.part_name}} got {{v.order_id.status}}</h3>
+
+			{% else %}
+
+				<div class="span2" style="padding-left:5em">
+					<img class="img-resize" src="{{v.prebook_id.part_id.path.url}}" alt=""/>
+				</div>	
+				<div class="span4">
+					<h3>Your prebook for {{v.prebook_id.part_id.part_name}} got {{v.prebook_id.status}}</h3>
+
+			{% endif %}
+			
+				<hr class="soft"/>
+				<p>
+					 {{v.time}}<br/>
+					
+				</p>
+				<a class="btn" href="{% url 'readNotification' v.id %}">Read</a>
+				
+				<br class="clr"/>
+			</div>
+			
+		   </div>
+
+		
+		<hr class="soft"/>
+		{% endfor %}
+		
+		
+	</div>
+
+	</div>
+		
+	{% endif %}
+		{% if reply %}
+			<div class="tab-content">
+	
+			<div id="listView" style="background:#202020;color:white;padding-left:5em">
+			<br/>
+				{% for v in reply %}
+			<div class="row">
+				
+				<div class="span4">
+				
+					<h3>{{v.subject}}</h3>
+					
+				<hr class="soft"/>
+				<p>
+					 {{v.reply}}<br/><br/>
+					 {{v.date}}<br/>
+					
+				</p>
+				<a class="btn" href="{% url 'readReply' v.id %}">Read</a>
+				<br/>
+				<br class="clr"/>
+			</div>
+			
+		   </div>
+			</div>
+		<hr class="soft"/>
+		{% endfor %}
+			</div>
+			</div>
+		
+		{% endif %}
+		{% if notification_count is 0 %}
+			<label>Empty</label>
+		{% endif %}
+	
+</div>
+{% endblock %}

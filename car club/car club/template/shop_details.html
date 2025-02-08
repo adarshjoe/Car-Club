@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>Spare Part Shops<span class="divider">/</span></li>
+		<li class="active">Spare Part Shop Details</li>
+    </ul>
+	<h3>Spare Part Shop Details</h3>
+	<hr class="soft"/>	
+	
+	
+	
+	  <div class="tab-content">
+		
+		{% for v in data %}
+				<div class="row">
+					<div class="span3">
+						<div class="image-frame" style="background:url('{{v.logo.url}}');background-size: cover;background-position: center;">
+
+						</div>
+					</div>
+					<div class="span4" >
+					<h3 style="font-size:20px;text-transform: uppercase;">{{v.username}}</h3>				
+					<hr class="soft"/>
+					<p style="font-size:15px">
+						<b>Shop Name :</b> {{v.shop_name}}<br/><br/>
+						<b>Address :</b> {{v.address}}<br/><br/>
+						<b>District :</b> {{v.district_id.district_name}}<br/></br/>
+						<b>Place :</b> {{v.place}}<br/><br/>
+						<b>Phone :</b> {{v.phone}}<br/><br/>
+						<b>Email :</b> {{v.email}}<br/><br/>
+						<b>Status :</b> {{v.status}}<br/><br/>
+						<b>Proof :</b> <br/><a href="{{v.proof.url}}"><img src="{{v.proof.url}}" class="img-resize-details" alt="no pic"/></a><br/><br/>
+					</p>
+					{% if v.status == "rejected" %}
+						<a class="btn btn-accent max-limit" href="{% url 'approveSpareShop' v.id %}">Approve</a>
+					{% elif v.status == "approved" %}
+						<a class="btn btn-accent max-limit" href="{% url 'rejectSpareShop' v.id %}">Reject</a>
+					{% else %}
+						<a class="btn max-limit btn-accent" href="{% url 'approveSpareShop' v.id %}">Approve</a>
+						<a class="btn max-limit btn-secondary" href="{% url 'rejectSpareShop' v.id %}">Reject</a>
+					{% endif %}
+					<br/><br/>
+					</div>
+					
+				</div>
+			<hr class="soft"/>
+		{% endfor %}
+	</div>
+
+	
+	<hr class="soft"/>
+	
+</div>
+	{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}	
+		
+		
+{% endblock %}

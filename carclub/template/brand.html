@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Brands</li>
+    </ul>
+	<h3> Brands </h3>	
+	<hr class="soft"/>
+	
+	
+	{% if data %}
+		<table class="table table-bordered" style="background:#202020;color:white">
+                	<tr>
+                  		<th>Vehicle</th>
+		  		<th>Brand</th>
+                  		<th></th>
+			</tr>
+			{% for v in data %}
+               	 	<tr>
+                  		<td>{{v.vehicle_id.vehicle_name}}</td>
+		  		<td>{{v.brand_name}}</td>
+		  		<td><a class="btn" href="{% url 'updateBrand' v.id %}">Update</a></td>
+				<td><a class="btn" href="{% url 'deleteBrand' v.id %}">Delete</a></td>
+                	</tr>
+			{% endfor %}
+                </table>
+		
+		<br/>
+		
+	{% else %}	
+	
+		<label>None</label>
+		
+	{% endif %}
+</div>
+
+{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}	
+{% endblock %}

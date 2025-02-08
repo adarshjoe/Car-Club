@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Complaints</li>
+    </ul>
+	<h3> Complaints </h3>	
+	<hr class="soft"/>		
+	{% if msg %}
+		<label>{{msg}}</label>
+	{% else %}		
+	<table class="table table-bordered" style="background:#202020;color:white">
+                <tr>
+                  <th>Username</th>
+		  <th>Subject</th>
+		  <th>Date</th>
+                  <th></th>
+		  <th></th>
+		</tr>
+		{% for v in data %}
+                <tr>
+                  <td>{{v.user_id.username}}</td>
+		  <td>{{v.subject}}</td>
+                  <td>{{v.date}}</td>
+		  <td><a class="btn" href="{% url 'complaintDetails' v.id %}">Details</a></td>
+		  <td><a class="btn" href="{% url 'deleteComplaint' v.id %}">Delete</a></td>
+                </tr>
+		{% endfor %}
+            </table>
+	{% endif %}
+	<br/>
+</div>
+		<script src="/static/jquery.min.js"></script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+
+
+		
+{% endblock %}

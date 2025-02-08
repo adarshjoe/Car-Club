@@ -1,0 +1,2 @@
+https://github.com/sonumahajan/Electronic-Web-Store
+https://github.com/codebasics/python_projects_grocery_webapp

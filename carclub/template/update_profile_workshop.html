@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	<script src="/static/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			var password=document.getElementById("password");
+			var confirm_password=document.getElementById("confirm_password");
+			function validatePassword(){
+				if(password.value != confirm_password.value){
+					confirm_password.setCustomValidity("Passwords Don't Match");
+				}
+				else{
+					confirm_password.setCustomValidity('');
+				}
+			}
+			password.onchange=validatePassword;
+			confirm_password.onkeyup=validatePassword;
+
+			$("#username").change(function(){
+
+				
+
+					$.ajax({
+						url:"{% url 'checkUsernameUpdate' %}",
+						data:{'username':$("#username").val()},
+						success:function(data){
+							if(data.status == "exists"){
+								alert('Username Already Exists');
+								$("#username").val('');
+								
+							}
+							
+			
+						}
+					});
+				
+
+			});
+			
+			
+			
+		});
+	</script>
+	
+	<div class="span9">
+    	<ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Account</li>
+    	</ul>
+	<h3>Account</h3>
+	<hr class="soft"/>	
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" method="post" action="{% url 'updateProfileWorkshopAction' %}" id="formupdate" enctype="multipart/form-data">
+	{% csrf_token %}
+		{% for v in data %}
+		<div class="control-group">
+			<label class="control-label"></label>
+			<div class="controls">
+			  <img src="{{v.logo.url}}" class="img-resize-user" alt="no pic"/>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label"></label>
+			<div class="controls">
+			  <input type="file" name="logo" id="logo"/>
+			</div>
+		 </div>
+		 	  
+		<div class="control-group">
+			<label class="control-label" for="shopname">Shop Name<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="shopname" id="shopname" value="{{v.shop_name}}" placeholder="Shop Name" required/>
+			</div>
+		 </div>
+
+		<div class="control-group">
+			<label class="control-label" for="address">Address<sup>*</sup></label>
+			<div class="controls">
+			  <textarea name="address" id="address" rows="4" placeholder="Address" required>{{v.address}}</textarea>
+			</div>
+		 </div>
+		
+		<div class="control-group">
+			<label class="control-label" for="state">State<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" id="state" value="Kerala" readonly="true"/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="district">District<sup>*</sup></label>
+			<div class="controls">
+			 <select name="district" id="district" required>
+				<option value="{{v.district_id_id}}">{{v.district_id.district_name}}</option>
+				{% for district in districts %}
+					<option value="{{district.id}}">{{district.district_name}}</option>
+				{% endfor %}
+			</select>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="place">Place<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="place" id="place" value="{{v.place}}" placeholder="Place" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="proof">Proof<sup>*</sup></label>
+			<div class="controls">
+			  <input type="file" name="proof" id="proof"/>
+			</div>
+		 </div>
+		
+		<div class="control-group">
+			<label class="control-label" for="phone">Phone<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="phone" id="phone" value="{{v.phone}}" pattern="^\d{10}$" placeholder="Phone" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="email">Email<sup>*</sup></label>
+			<div class="controls">
+			  <input type="email" name="email" id="email" value="{{v.email}}" placeholder="Email" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="username">Username<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="username" id="username" value="{{v.username}}" placeholder="Username" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="password">Password<sup>*</sup></label>
+			<div class="controls">
+			  <input type="password" name="password" id="password" pattern=".{8,}" title="Eight or more Characters" value="{{v.password}}" placeholder="Password" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="confirm_password">Confirm Password<sup>*</sup></label>
+			<div class="controls">
+			  <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" value="{{v.password}}" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label">Uploaded Proof</label>
+			<div class="controls">
+			
+			  <a href="{{v.proof.url}}"><img src="{{v.proof.url}}" class="img-resize-details" alt="no pic"/></a>
+			
+			</div>
+		 </div>
+		
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" id="update" value="Update" />
+			</div>
+		</div>	
+		{% endfor %}
+	</form>
+	
+</div>
+</div>
+
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

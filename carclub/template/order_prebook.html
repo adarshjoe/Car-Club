@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>Prebookings<span class="divider">/</span></li>
+		<li class="active">Order Prebook</li>
+    </ul>
+	<h3>Order Prebook</h3>
+	<hr class="soft"/>
+	<div class="tab-content">	
+	<div class="row" style="background:#202020;color:white;padding-left:5em">
+	<br/><br/>
+	    {% for v in data %}
+				  
+			<div id="gallery" class="span3">
+            			
+				<img class="img-resize-details" src="{{v.part_id.path.url}}" style="width:100%" alt="no pic"/>
+			 	
+			</div>
+			<div class="span6">
+				<h3>{{v.part_id.part_name}}</h3>
+				<hr class="soft"/>
+				  <div class="control-group">
+					<label class="control-label"><span style="font-size:20px">{{v.part_id.price}} .RS</span></label>
+				  </div>
+			
+				<br class="clr"/>
+			</div>
+			<br/>
+			<br/>
+			
+			<div class="span9">
+            <div id="myTabContent" class="tab-content">
+              <div class="tab-pane fade active in" id="home" style="padding-right:130px">
+		<br/>	  
+                <table class="table table-bordered">
+				<tbody>
+				<tr class="techSpecRow"><th colspan="2">Spare Part Details</th></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1">Brand: </td><td class="techSpecTD2">{{v.part_id.brand_id.brand_name}}</td></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1">Model:</td><td class="techSpecTD2">{% for p in part_model %}{{p.model_id.model_name}}{% if forloop.counter != part_model.count %},{% endif %}{% endfor %}</td></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1">Available Stock For You:</td><td class="techSpecTD2">{{v.count}}</td></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1">Seller:</td><td class="techSpecTD2">{{v.shop_id.shop_name}}</td></tr>
+				<tr class="techSpecRow"><td class="techSpecTD1">Seller Address:</td><td class="techSpecTD2">{{v.shop_id.address}}</td></tr>
+				</tbody>
+				</table>
+				
+				<h5>Features</h5>
+				<p>
+				    {{ v.part_id.details }}<br/>
+				</p>
+				<br/><br/>
+				
+              </div>
+		
+	</div>
+</div>
+{% endfor %}
+</div>
+</div>
+	<br/>
+	<div class="well" style="background:#202020;color:white;">
+	<br/><br/>
+		<form class="form-horizontal" method="post" action="{% url 'confirmOrderAction' %}">
+		{% csrf_token %}
+		{% for v in data %}	
+		
+		<input type="hidden" name="price" id="price" value="{{v.part_id.price}}"/>
+		<input type="hidden" name="bid" id="bid" value="{{v.id}}"/>
+		<input type="hidden" name="pid" id="pid" value="{{v.part_id_id}}"/>
+		<input type="hidden" name="sid" id="sid" value="{{v.shop_id_id}}"/>
+		<input type="hidden" name="stock" id="stock" value="{{v.count}}"/>	  
+		<div class="control-group">
+			<label class="control-label" for="phone">Contact Number<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="phone" id="phone" pattern="^\d{10}$" placeholder="Contact Number" required/>
+			</div>
+		 </div>
+
+		<div class="control-group">
+			<label class="control-label" for="address">Shipping Address<sup>*</sup></label>
+			<div class="controls">
+			  <textarea id="address" name="address" rows="4" placeholder="Shipping Address" required></textarea>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="count">Quantity<sup>*</sup></label>
+			<div class="controls">
+			  <input type="number" name="count" id="count" placeholder="Quantity" required/>
+			</div>
+		 </div>
+		<div class="control-group">
+			<label class="control-label" for="cost">Total Cost<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="cost" id="cost" placeholder="Total Cost" readonly="true"/> RS 
+			</div>
+		 </div>
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Confirm Order" />
+			</div>
+		</div>
+	     	{% endfor %}		
+	</form>
+	</div>
+</div>
+	
+	
+			
+		<script src="/static/jquery.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			$('#count').change(function(){
+				count=parseFloat($('#count').val());
+				price=parseFloat($('#price').val());
+				cost=count*price;
+				$('#cost').val(cost.toFixed(2));
+			});
+
+		});
+		</script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+		{% if msg %}
+			<script>
+				alert('{{msg}}');
+			</script>
+		{% endif %}
+{% endblock %}

@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Spare Parts</li>
+    </ul>
+	
+	<h3> Spare Parts </h3>	
+	<hr class="soft"/>
+	
+{% if msg %}
+	<label>{{msg}}</label>
+{% else %}	
+
+<br/>
+
+<div class="tab-content">
+	
+	<div id="listView" style="background:#202020;color:white">
+		<br/>
+		<form method="get" id="form1" action="">
+		{% csrf_token %}
+		{% for v in parts %}
+		
+		<div class="row">	  
+			<div class="span2">
+				&nbsp&nbsp&nbsp&nbsp<img class="img-resize" src="{{v.part_obj.path.url}}" alt=""/>
+			</div>
+			<div class="span4">
+				<h3>{{v.part_name}}</h3>				
+				<hr class="soft"/>
+				<p>
+					Brand : {{v.brand_id.brand_name}}<br/>
+					Model : {{v.models}}<br/>
+					Price : {{v.price}} RS <br/>
+					{% if v.stock == '0' %}
+						Unavailable
+					{% endif %}
+				</p>
+				<a class="btn" href="{% url 'viewReview' v.id %}">Reviews</a>
+				<br class="clr"/>
+			</div>
+			<div class="span3 alignR" style="margin-left:10px">
+			<form class="form-horizontal qtyFrm">
+			<h3> </h3>
+			<label class="checkbox">
+				<input type="checkbox" id="part_id" name="part_id" value="{{v.id}}">  Adds product to compair
+			</label><br/>
+
+			{% if 'user_id' in request.session %}
+				{% if v.stock != '0' %}
+
+					<a href="{% url 'addToCart' v.id %}" class="btn btn-large btn-primary"> Add to <i class=" icon-shopping-cart"></i></a>
+
+				{% else %}
+
+					<a href="{% url 'prebook' v.id %}" class="btn btn-large btn-primary"> Prebook <i class=" icon-shopping-cart"></i></a>
+
+				{% endif %}
+				
+
+			{% else %}
+						
+				{% if v.stock != '0' %}
+
+					<a href="{% url 'login' %}" class="btn btn-large btn-primary"> Add to <i class=" icon-shopping-cart"></i></a>
+
+				{% else %}
+
+					<a href="{% url 'login' %}" class="btn btn-large btn-primary"> Prebook <i class=" icon-shopping-cart"></i></a>
+
+				{% endif %}
+
+					
+			{% endif %}
+			
+			  <a href="{% url 'partDetails' v.id %}" class="btn btn-large"><i class="icon-zoom-in"></i></a>
+				</form>
+			</div>
+		</div>
+		<hr class="soft"/>
+		{% endfor %}
+		<button type="submit" id="compare"  style="border:5px solid #202020;" class="btn btn-large pull-right">Compare</button>
+		</form>
+
+	</div>
+	
+	
+</div>
+
+	
+{% endif %}
+	<div class="pagination">
+		{% if parts.has_other_pages %}
+			<ul class="pagination" style="border:5px solid #202020;">
+				{% if parts.has_previous %}
+					<li><a href="?page={{ parts.previous_page_number }}&vehicle={{ vehicle }}&brand={{ brand }}&model={{ model }}&category={{ category }}&part_name={{ part }}">&laquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&laquo;</span></li>
+				{% endif %}
+				{% for i in parts.paginator.page_range %}
+					{% if parts.number == i %}
+						<li class="active"><span>{{i}}<span class="sr-only">(current)</span></span></li>
+					{% else %}
+						<li><a href="?page={{i}}&vehicle={{ vehicle }}&brand={{ brand }}&model={{ model }}&category={{ category }}&part_name={{ part }}">{{i}}</a></li>
+					{% endif %}
+				{% endfor %}
+				{% if parts.has_next %}
+					<li><a href="?page={{ parts.next_page_number }}&vehicle={{ vehicle }}&brand={{ brand }}&model={{ model }}&category={{ category }}&part_name={{ part }}">&raquo;</a></li>
+				{% else %}
+					<li class="disabled"><span>&raquo;</span></li>
+				{% endif %}
+			</ul>
+		{% endif %}
+	</div>	
+	<br/>	
+	<hr class="soft"/>
+
+	<div id="pdiv"></div>
+
+</div>	
+	<script src="/static/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			localStorage.removeItem('selected_items');
+			var selected_items = [];
+
+
+			try {
+				var previously_selected_items = JSON.parse(localStorage.getItem('selected_items'));
+				selected_items.push.apply(selected_items, previously_selected_items);
+			} catch (ignore) {
+			// this just means that there are no previously selected items.. no biggie.
+			}
+
+			function add_remove_to_selected_items(item) {
+			if (item.is(":checked")) {
+				selected_items.push(item.val());
+			} else {
+				var index = selected_items.indexOf(item.val());
+				if (index > -1) {
+					selected_items.splice(index, 1);
+				} else {
+					try {
+                		// this has never happened to me...
+						console.log('ERROR: Contact not in selected contacts.');
+					} catch(ignore) {};
+				}
+			}
+			}
+
+		function force_remove_local_selected_items() {
+			localStorage.removeItem('selected_items');
+		}
+
+		function update_local_selected_items() {
+			if (selected_items.length > 0) {
+				localStorage.setItem('selected_items', JSON.stringify(selected_items));
+			} else {
+				force_remove_local_selected_items(false);
+			}
+			$(".selected_contacts_html").remove();
+
+			//var selected_html = $("<em/>", {
+				//'html': "Total Selected: " + selected_items.length,
+				//'class': 'selected_items_html text-info'
+			//});
+			//var clear_all_btn = $("<button/>", {
+				//'type': 'button',
+				//'class': 'btn btn-link',
+				//'html': 'Clear Selection',
+				//click: function() {
+					//force_remove_local_selected_items();
+				//}
+			//}).appendTo(selected_html);
+
+			//$("form > .text-center.form-group.text-muted").append(selected_html);
+		}
+
+
+
+		selected_items.forEach(function(value){
+			// find a checkbox with the value and 'check' it OR create a hidden input with the name of 'item_action'
+			var existing_checkbox_input = $("input[value='"+value+"']");
+
+			if (existing_checkbox_input.length > 0) {
+				// it found the checkbox, mark it as checked.
+				existing_checkbox_input.prop('checked', true);
+			} else {
+				// create a hidden input so when they submit the form that is submitted.
+				var new_hidden_input = $("<input/>", {
+					'type': 'hidden',
+					'class': 'added_in_background',
+					'name': 'item_action',
+					'value': value
+				}).appendTo($("form#form1"));
+			}
+		});
+
+		$("input[name=part_id]").on('click', function(){
+			add_remove_to_selected_items($(this));
+			update_local_selected_items();
+		});
+
+		// thought about doing to so when you submit form it removes the selected items from local storage... but if the form is not valid and you are returned back with errors, you don't want the checkboxes to be forgotten.
+		// $("form#select_action").on('submit', function() {
+		// 	localStorage.removeItem('selected_items');
+		// });
+
+		$("#compare").click(function(){
+			if(selected_items.length < 2){
+				alert('Select Two Items To Compare');
+			}
+			else if(selected_items.length > 2){
+				alert('You have selected more than two items');	
+			}
+			else{
+				
+				$.ajax({
+					url:"{% url 'compareProduct' %}",
+					data:{'part1':selected_items[0],
+					      'part2':selected_items[1],
+					},
+					success:function(data){
+						$("#pdiv").html(data);
+						$("html,body").animate({ scrollTop:$("#pdiv").offset().top-$("#pdiv").height()+500},800);
+					}
+				});
+			}
+		});
+		
+		});
+	</script>
+{% endblock %}

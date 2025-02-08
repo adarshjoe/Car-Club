@@ -1,0 +1,145 @@
+{% load static %}
+<html>
+	<script src="/static/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$("#vehicle").change(function(){
+				vid=$("#vehicle").val();
+				$.ajax({
+					url:"{% url 'getBrand' %}",
+					data:{'vehicle_id':vid},
+					success:function(data){
+						$("#brand").html(data);
+					}
+				});
+				$.ajax({
+					url:"{% url 'getCategory' %}",
+					data:{'vehicle_id':vid},
+					success:function(data){
+						$("#category").html(data);
+					}
+				});
+			});
+
+			$("#brand").change(function(){
+				bid=$("#brand").val();
+				$.ajax({
+					url:"{% url 'getModel' %}",
+					data:{'brand_id':bid},
+					success:function(data){
+						$("#model").html(data);
+					}
+				});
+			});
+			
+			$("#view").click(function(){
+				vid=$("#vehicle").val();
+				bid=$("#brand").val();
+				mid=$("#model").val();
+				cid=$("#category").val();
+				part=$("#part_name").val();
+				if((cid != '') && ((vid == '') ||(bid == '')||(mid == ''))){
+					alert('Make selections');
+				}
+				else{
+					$.ajax({
+						url:"{% url 'getSpareParts' %}",
+						data:{
+							'vehicle_id':vid,
+							'brand_id':bid,
+							'model_id':mid,
+							'category_id':cid,
+							'part_name':part
+						},
+						success:function(data){
+							$("#s_part").html(data);
+						}	
+					});
+				}
+				
+			});
+		});
+	</script>
+	<body>
+		<table>
+			<tr>
+				<td>Vehicle</td>
+				<td><select id="vehicle" name="vehicle">
+					<option value="">--select--</option>
+					{% for v in vehicle %}
+						<option value="{{v.id}}">{{v.vehicle_name}}</option>
+					{% endfor %}
+					</select>
+				</td>
+				<td><label id="demo"></label></td>
+			</tr>
+			<tr>
+				<td>Brand</td>
+				<td><select id="brand" name="brand">
+					<option value="">--select--</option>
+				    </select>
+				</td>
+			</tr>
+			<tr>
+				<td>Model</td>
+				<td><select id="model" name="model">
+						<option value="">--select--</option>
+				    		</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Category</td>
+				<td><select id="category" name="category">
+					<option value="">--select--</option>
+				    	</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Spare Part Name</td>
+				<td><input type="text" name="part_name" id="part_name"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><button type="button" name="view" id="view">View</button></td>
+			</tr>
+		</table>
+
+		<div id="s_part">
+			{% for v in data %}
+			<table>
+				<tr>
+					<td></td>
+					<td><img src="{{v.path.url}}" height="60px" width="60px" alt="no pic"/></td>
+				</tr>
+				<tr>
+					<td>Part Name</td>
+					<td>{{v.part_name}}</td>
+				</tr>
+				<tr>
+					<td>Stock</td>
+					{% if v.stock == '0' %}
+					<td>Unavailable</td>
+					{% else %}
+					<td>{{v.stock}}</td>
+					{% endif %}
+				</tr>
+				<tr>
+					<td>Price</td>
+					<td>{{v.price}}</td>
+				</tr>
+				<tr>
+					<td></td>
+					{% if v.stock != '0' %}
+					<td><a href="{% url 'addToCart' v.id %}">Add To Cart</a></td>
+					{% else %}
+					<td><a href="{% url 'prebook' v.id %}">Prebook</a></td>
+					{% endif %}
+					<td><a href="{% url 'viewReview' v.id %}">Reviews</a></td>
+					<td><a href="{% url 'partDetails' v.id %}">Details</a></td>
+				</tr>
+				
+			</table>
+			{% endfor %}
+		</div>
+	</body>
+</html>

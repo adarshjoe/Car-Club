@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li class="active">Edit Category</li>
+    </ul>
+	<h3>Edit Category</h3>
+	<hr class="soft"/>	
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" method="post" action="{% url 'editCategoryAction' %}">
+	{% csrf_token %}
+		{% for v in data %}
+			<input type="hidden" name="cid" value="{{v.id}}"/>
+		<div class="control-group">
+			<label class="control-label" for="vehicle">Vehicle<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="vehicle" id="vehicle" placeholder="vehicle" value="{{v.vehicle_id.vehicle_name}}" readonly="true" required/>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="category">Category<sup>*</sup></label>
+			<div class="controls">
+			  <input type="text" name="category" id="category" placeholder="category" value="{{v.category}}" required/>
+			</div>
+		 </div>
+		 	  
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Update" />
+			</div>
+		</div>	
+		{% endfor %}	
+	</form>
+	<a href="{% url 'viewCategory' %}" class="btn btn-large pull-right">Back</a>
+</div>
+</div>
+		<script src="/static/jquery.min.js"></script>
+		{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>Complaints<span class="divider">/</span></li>
+		<li class="active">Complaint Details</li>
+    </ul>
+	<h3>Complaint Details</h3>
+	<hr class="soft"/>	
+	
+	  <div class="tab-content">
+		
+		{% for v in data %}
+				<div class="row" style="background:#202020;color:white">
+					<br/><br/>	  
+					<div class="span2" style="padding-left:5em">
+						<img class="img-resize-user" style="border:5px solid #fff;" src="{{v.user_id.path.url}}" alt=""/>
+					</div>
+					<div class="span4">
+					<h3 style="font-size:20px">{{v.user_id.username}}</h3>				
+					<hr class="soft"/>
+					<p style="font-size:15px">
+						Phone : {{v.user_id.phone}}<br/><br/>
+						Email : {{v.user_id.email}}<br/><br/>
+						Subject : {{v.subject}}<br/><br/>
+						Complaint : {{v.complaint}}<br/><br/>
+						Date : {{v.date}}<br/><br/>
+						 
+					</p>
+					
+					</div>
+					
+				</div>
+			<hr class="soft"/>
+		{% endfor %}
+	</div>
+
+	
+	<hr class="soft"/>
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" method="post" action="{% url 'replyAction' %}">
+	{% csrf_token %}
+		<input type="hidden" name="complaint_id" value="{{data.0.id}}"/>	
+		<div class="control-group">
+			<label class="control-label" for="subject">Subject<sup>*</sup></label>
+			<div class="controls">
+			  <textarea name="subject" id="subject" rows="2" placeholder="Subject" required></textarea>
+			</div>
+		 </div>
+		 	  
+		
+		<div class="control-group">
+			<label class="control-label" for="complaint">Reply<sup>*</sup></label>
+			<div class="controls">
+			  <textarea name="reply" id="reply" rows="4" placeholder="Reply" required></textarea>
+			</div>
+		 </div>
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Submit" />
+			</div>
+		</div>		
+	</form>
+</div>
+</div>
+	{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+
+{% endblock %}

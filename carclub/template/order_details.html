@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li> View Orders<span class="divider">/</span></li>
+		<li class="active">Order Details</li>
+    </ul>
+	<h3> Order Details </h3>	
+	<hr class="soft"/>		
+	{% if msg %}
+		<label>{{msg}}</label>
+	{% else %}
+		<div class="tab-content">
+		
+		<div id="listView" style="background:#202020;color:white">
+		<br/>
+		{% for v in data %}
+				<div class="row">	  
+					<div class="span2" style="padding-left:5em">
+						<img class="img-resize-user" src="{{v.part_id.path.url}}" alt=""/>
+					</div>
+					<div class="span4">
+					<h3 style="font-size:20px">{{v.part_id.part_name}}{% if v.prebook_id != None %}<span style="float:right;font-size:15px">Prebooked : ID : {{v.prebook_id}}</span>{% endif %}</h3>				
+					<hr class="soft"/>
+					<p style="font-size:15px">
+						Brand  &nbsp	      : &nbsp{{v.part_id.brand_id.brand_name}}<br/></br>
+						Model  &nbsp	      : &nbsp{% for p in part_model %}{{p.model_id.model_name}}{% if forloop.counter != part_model.count %},{% endif %}{% endfor %}<br/></br>
+						Details &nbsp         : &nbsp{{v.part_id.details}}<br/><br/>
+						Price     &nbsp       : &nbsp{{v.part_id.price}} RS<br/><br/>
+						Buyer      &nbsp      : &nbsp{{v.user_id.name}}<br/><br/>
+						Contact Number  &nbsp : &nbsp{{v.phone}}<br/><br/>
+						Shipping Address &nbsp: &nbsp{{v.address}}<br/><br/>
+						Quantity        &nbsp : &nbsp{{v.count}}<br/><br/>
+						Total Price   &nbsp   : &nbsp{{v.total_price}} RS<br/><br/>
+						Date          &nbsp   : &nbsp{{v.date}}<br/><br/>
+						Time      &nbsp       : &nbsp{{v.time}}<br/><br/>
+						Status       &nbsp    : &nbsp{{v.status}}<br/>
+			
+					</p>
+					{% if v.status == "pending" %}
+			
+				
+						<a class="btn" href="{% url 'approveOrder' v.id %}">Approve Order</a>
+				
+						<a class="btn" href="{% url 'rejectOrder' v.id %}">Reject Order</a>
+					
+					{% elif v.status == "approved" %}
+			
+						<a class="btn" href="{% url 'rejectOrder' v.id %}">Reject Order</a>
+			
+					{% endif %}
+					
+					</div>
+					
+				</div>
+			<hr class="soft"/>
+			{% endfor %}
+		</div>
+
+	
+		<hr class="soft"/>
+		</div>
+	{% endif %}
+
+</div>
+{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}
+
+		
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>Spare Part Shops<span class="divider">/</span></li>
+		<li class="active">Spare Part Shop Details</li>
+    </ul>
+	<h3>Spare Part Shop Details</h3>
+	<hr class="soft"/>	
+	
+	
+	
+	  <div class="tab-content">
+		
+		{% for v in data %}
+				<div class="row" style="background:#202020;color:white">
+					<br/><br/>	  
+					<div class="span2" style="padding-left:5em;">
+						<img class="img-resize-user" style="border:5px solid #fff;" src="{{v.logo.url}}" alt=""/>
+					</div>
+					<div class="span4">
+					<h3 style="font-size:20px">{{v.username}}</h3>				
+					<hr class="soft"/>
+					<p style="font-size:15px">
+						Shop Name : {{v.shop_name}}<br/><br/>
+						Address : {{v.address}}<br/><br/>
+						District : {{v.district_id.district_name}}<br/></br/>
+						Place : {{v.place}}<br/><br/>
+						Phone : {{v.phone}}<br/><br/>
+						Email : {{v.email}}<br/><br/>
+						Status : {{v.status}}<br/><br/>
+						Proof : <br/><a href="{{v.proof.url}}"><img src="{{v.proof.url}}" class="img-resize-details" alt="no pic"/></a><br/><br/>
+					</p>
+					{% if v.status == "rejected" %}
+						<a class="btn" href="{% url 'approveSpareShop' v.id %}">Approve</a>
+					{% elif v.status == "approved" %}
+						<a class="btn" href="{% url 'rejectSpareShop' v.id %}">Reject</a>
+					{% else %}
+						<a class="btn" href="{% url 'approveSpareShop' v.id %}">Approve</a>
+						<a class="btn" href="{% url 'rejectSpareShop' v.id %}">Reject</a>
+					{% endif %}
+					<br/><br/>
+					</div>
+					
+				</div>
+			<hr class="soft"/>
+		{% endfor %}
+	</div>
+
+	
+	<hr class="soft"/>
+	
+</div>
+	{% if messages %}
+			{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+			{% endfor %}
+		{% endif %}	
+		
+		
+{% endblock %}

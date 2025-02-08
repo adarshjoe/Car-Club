@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+	
+	<div class="span9">
+    <ul class="breadcrumb">
+		<li>Home<span class="divider">/</span></li>
+		<li>View Orders<span class="divider">/</span></li>
+		<li class="active">Tracking Details</li>
+    </ul>
+	<h3>Tracking Details</h3>
+	<hr class="soft"/>	
+	<div class="well" style="background:#202020;color:white">
+	<br/><br/>
+	<form class="form-horizontal" method="post" action="{% url 'addTrackingDetailsAction' %}">
+	{% csrf_token %}
+		<input type="hidden" name="order_id" id="order_id" value="{{order_id}}"/>
+		<input type="hidden" name="page" id="page" value="{{page}}"/>
+		<div class="control-group">
+			
+			<div class="controls">
+			<label class="checkbox">
+			  <input type="checkbox" name="decheck" id="decheck" value="delivered"/>Delivered
+			</label>
+			</div>
+		 </div>	
+		<div class="control-group">
+			<label class="control-label" for="details">Tracking Details<sup>*</sup></label>
+			<div class="controls">
+			  <textarea name="details" id="details" placeholder="Tracking Details" rows="3" required></textarea>
+			</div>
+		 </div>
+		 	  
+		<div class="control-group">
+			<div class="controls">
+				
+				<input class="btn btn-large btn-success" type="submit" value="Submit" />
+			</div>
+		</div>		
+	</form>
+</div>
+</div>	
+
+	<script src="/static/jquery.min.js"></script>
+	{% if messages %}
+		{% for message in messages %}
+			<script>
+				alert('{{message}}');
+			</script>
+		{% endfor %}
+	{% endif %}
+	<script>
+	$(document).ready(function(){
+		$("#decheck").click(function(){
+			if( $("#decheck").prop('checked') == true ){
+				$("#details").val($("#decheck").val());
+				
+			}
+			else{
+				$("#details").val('');
+				$("#details").show();
+			}
+		});
+	});
+	</script>
+{% endblock %}

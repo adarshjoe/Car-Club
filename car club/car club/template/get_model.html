@@ -1,0 +1,13 @@
+<div id="modeldiv" style="margin-left:30px">
+	<div class="row">
+	{% for v in data %}
+	<div class="col" style="margin-top:10px">
+	
+	<input type="checkbox" style="margin-bottom:6px" name="model" value="{{v.id}}"/><span style="margin-left:20px">{{v.model_name}}</span>
+	
+	</div>
+	
+	{% endfor %}
+	</div>
+	
+</div>
